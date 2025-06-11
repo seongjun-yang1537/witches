@@ -16,6 +16,12 @@ namespace Ingame
 
         public PlayerState state;
 
+        public override void OnMovePhase(float progress)
+        {
+            base.OnMovePhase(progress);
+            SetState(PlayerState.Idle);
+        }
+
         public void SetState(PlayerState state)
         {
             this.state = state;

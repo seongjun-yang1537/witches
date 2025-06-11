@@ -16,21 +16,27 @@ namespace Ingame
 
         bool isDraggingHandle;
 
-        Vector3 handlePosition = -Vector3.one;
-
-        void Awake()
+        protected void Awake()
         {
             camera = Camera.main;
 
             handleMeshRenderer = handle.GetComponent<MeshRenderer>();
             handleMeshRenderer.material = new Material(handleMeshRenderer.material);
+
+            GameManager.Instance.onPhaseProgress.AddListener(phase =>
+            {
+                OnMouseUpHandle();
+            });
+            GameManager.Instance.onPhaseEnd.AddListener(() =>
+            {
+                OnMouseUpHandle();
+            });
         }
 
         protected void Update()
         {
             UpdateActive();
             UpdateSelectedPlayer();
-
             UpdateHandle();
         }
 
@@ -47,16 +53,12 @@ namespace Ingame
                 return;
 
             Transform tr = selectedPlayer.transform;
-            if (handlePosition == -Vector3.one)
-            {
-                handlePosition = tr.position + tr.forward * 3;
-            }
 
             Vector3 startPosition = tr.position;
             lineRenderer.SetPosition(0, startPosition);
-            lineRenderer.SetPosition(1, handlePosition);
+            lineRenderer.SetPosition(1, selectedPlayer.targetPosition);
 
-            handle.position = handlePosition;
+            handle.position = selectedPlayer.targetPosition;
         }
 
         private void SetHandleColor(Color color)
@@ -67,24 +69,33 @@ namespace Ingame
             if (Input.GetMouseButtonDown(0))
             {
                 isDraggingHandle = GetMouseInHandle();
-
                 if (isDraggingHandle)
-                    SetHandleColor(Color.yellow);
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                isDraggingHandle = false;
-                SetHandleColor(Color.white);
-
-                handlePosition = -Vector3.one;
+                    OnMouseDownHandle();
             }
 
             if (isDraggingHandle)
-                UpdateDraggingHandle();
+                OnMouseMoveHandle();
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (isDraggingHandle)
+                    OnMouseUpHandle();
+                isDraggingHandle = false;
+            }
         }
 
-        private void UpdateDraggingHandle()
+        private bool GetMouseInHandle()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            return Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("UI"));
+        }
+
+        private void OnMouseDownHandle()
+        {
+            SetHandleColor(Color.yellow);
+        }
+
+        private void OnMouseMoveHandle()
         {
             Vector3 screenPointOfHandle = camera.WorldToScreenPoint(handle.position);
             float zDepth = screenPointOfHandle.z;
@@ -93,17 +104,16 @@ namespace Ingame
             Vector3 projectionPosition = new Vector3(mousePosition.x, mousePosition.y, zDepth);
             Vector3 worldPosition = camera.ScreenToWorldPoint(projectionPosition);
 
-            handlePosition = new Vector3(
+            selectedPlayer.targetPosition = new Vector3(
                 worldPosition.x,
                 handle.position.y,
                 worldPosition.z
             );
         }
 
-        private bool GetMouseInHandle()
+        private void OnMouseUpHandle()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            return Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("UI"));
+            SetHandleColor(Color.white);
         }
     }
 }

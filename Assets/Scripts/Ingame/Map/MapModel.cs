@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Corelib.SUI;
 using Corelib.Utils;
 using UnityEngine;
@@ -10,18 +12,61 @@ namespace Ingame
         public Transform entities;
         public Transform envirnoment;
 
+        private List<AgentModel> agentModels = new();
+
         public Vector3Int size;
         private MT19937 rng { get => GameManager.Instance.rng; }
+
+        GamePhase phase { get => GameManager.Instance.phase; }
 
         protected void Awake()
         {
             InitializeGroups();
+
+            agentModels = entities.Cast<Transform>()
+                .Select(child => child.GetComponent<AgentModel>())
+                .Where(agentModel => agentModel != null)
+                .ToList();
+
+            GameManager.Instance.onPhase.AddListener(phase =>
+            {
+                OnPhaseAgents();
+            });
+
+            GameManager.Instance.onPhaseProgress.AddListener(progress =>
+            {
+                OnPhaseProgressAgents(progress);
+            });
         }
 
         private void InitializeGroups()
         {
             entities = FindDirectChildByName(nameof(entities));
             envirnoment = FindDirectChildByName(nameof(envirnoment));
+        }
+
+        private void OnPhaseAgents()
+        {
+            foreach (var agentModel in agentModels)
+            {
+                agentModel.OnPhase();
+            }
+        }
+
+        private void OnPhaseProgressAgents(float progress)
+        {
+            foreach (var agentModel in agentModels)
+            {
+                switch (phase)
+                {
+                    case GamePhase.Move:
+                        agentModel.OnMovePhase(progress);
+                        break;
+                    case GamePhase.Attack:
+                        agentModel.OnAttackPhase(progress);
+                        break;
+                }
+            }
         }
 
         private Transform FindDirectChildByName(string name)
@@ -53,6 +98,8 @@ namespace Ingame
 
             AgentModel agentModel = go.GetComponent<AgentModel>();
             go.name = $"[{agentModel.team}]{agentType}";
+
+            agentModels.Add(agentModel);
         }
 
         private void OnDrawGizmos()
