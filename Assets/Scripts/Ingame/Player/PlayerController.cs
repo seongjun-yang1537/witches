@@ -4,10 +4,7 @@ namespace Ingame
 {
     public class PlayerController : AgentController
     {
-        protected PlayerModel playerModel;
-        protected void Awake()
-        {
-            playerModel = agentModel as PlayerModel;
-        }
+        private PlayerModel _playerModel;
+        protected PlayerModel PlayerModel { get => _playerModel ??= GetComponent<PlayerModel>(); }
     }
 }

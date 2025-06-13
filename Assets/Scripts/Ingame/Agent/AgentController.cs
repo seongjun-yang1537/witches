@@ -5,12 +5,8 @@ namespace Ingame
     [RequireComponent(typeof(AgentModel))]
     public class AgentController : MonoBehaviour
     {
-        public AgentModel agentModel;
-
-        protected void Awake()
-        {
-            agentModel = GetComponent<AgentModel>();
-        }
+        private AgentModel _agentModel;
+        public AgentModel AgentModel { get => _agentModel ??= GetComponent<AgentModel>(); }
 
         public virtual void Select()
         {

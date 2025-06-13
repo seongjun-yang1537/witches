@@ -3,6 +3,7 @@ using System.Linq;
 using Corelib.SUI;
 using Corelib.Utils;
 using Sirenix.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Ingame
@@ -61,7 +62,7 @@ namespace Ingame
         private void SetupAgentObject(GameObject gameObject)
         {
             AgentController agentController = gameObject.GetComponent<AgentController>();
-            AgentModel agentModel = agentController.agentModel;
+            AgentModel agentModel = agentController.AgentModel;
             gameObject.name = $"[{agentModel.team}]{agentModel.agentType}";
 
             agents.Add(agentController);

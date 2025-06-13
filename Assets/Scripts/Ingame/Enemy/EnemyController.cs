@@ -4,10 +4,7 @@ namespace Ingame
 {
     public class EnemyController : AgentController
     {
-        protected EnemyModel enemyModel;
-        protected void Awake()
-        {
-            enemyModel = agentModel as EnemyModel;
-        }
+        private EnemyModel _enemyModel;
+        protected EnemyModel EnemyModel { get => _enemyModel ??= GetComponent<EnemyModel>(); }
     }
 }

@@ -13,18 +13,11 @@ MonoBehaviour:
   m_Name: Groups
   m_EditorClassIdentifier: 
   _all:
-  - _id: 04e3fe181f79a711952e1155fc0af6cc92647696-5d68f7f6-bb5d-461c-822d-b236eb391734
-    _boardID: 04e3fe181f79a711952e1155fc0af6cc92647696-15511c80-e864-4bc6-991b-3e9e94ddb6ef
-    _name: Ingame
+  - _id: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-9d49945d-4b09-49d7-8a24-e217ed7ebf56
+    _boardID: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-5455b91c-3000-4ba2-8280-fa210c5d4931
+    _name: Planned
     _taskIds:
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-fba5a6c0-26e8-4b7d-8498-7dcf7a864dbf
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-309e1bfc-9b6c-476e-bdca-95b2c94af227
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-0c08c735-a0ad-4a8a-a990-af2a211fdad0
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-c2268171-c273-483b-8f63-b661e659cde1
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-33bc7f54-4936-4047-8ae9-9801c1f377c8
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-8db80c85-890a-485d-97f8-147b695d09b2
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-2edab081-3aa4-4f3f-abc0-1e0b16605cab
-    - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-c61166b4-dab1-4fca-9fbf-972a36e4d45e
+    - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-b584727c-9316-4723-ad6c-220b55504bac
     _scrollPosition: {x: 0, y: 0}
     _treeWindow_SearchShow: 1
     TreeWindowShowAnimation:
@@ -32,12 +25,10 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
     _treeWindow_ShowTasks: 0
-  - _id: 04e3fe181f79a711952e1155fc0af6cc92647696-548f0e41-12aa-415c-9570-e5c9568c7259
-    _boardID: 04e3fe181f79a711952e1155fc0af6cc92647696-15511c80-e864-4bc6-991b-3e9e94ddb6ef
-    _name: Outgame
-    _taskIds:
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-75cae1f1-f17e-4872-a27e-7f270b3c6b55
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-b492ab1c-4c20-4405-a0e9-ce5b687a67ec
+  - _id: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-d2b55abd-e388-4bb6-a4a4-17ce599d8ab9
+    _boardID: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-5455b91c-3000-4ba2-8280-fa210c5d4931
+    _name: In Progress
+    _taskIds: []
     _scrollPosition: {x: 0, y: 0}
     _treeWindow_SearchShow: 1
     TreeWindowShowAnimation:
@@ -45,15 +36,21 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
     _treeWindow_ShowTasks: 0
-  - _id: 04e3fe181f79a711952e1155fc0af6cc92647696-39d6769b-b110-4a65-81fe-dddfdbec0fb2
-    _boardID: 04e3fe181f79a711952e1155fc0af6cc92647696-15511c80-e864-4bc6-991b-3e9e94ddb6ef
-    _name: Testbed
-    _taskIds:
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-949b9d5e-77ef-41b4-9a0f-ad3a734df145
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-ae847ec1-bf65-4e41-8c18-930c656d153b
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-8d496a86-ce0f-4397-9934-79f1d2ff6d53
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-4dadfbad-bcab-40ff-81bb-afcb2e9fca6e
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-2b2368a6-a595-471b-a57a-5af32e02bd54
+  - _id: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-ac681197-04e1-4fc7-852d-a295cb2b0766
+    _boardID: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-5455b91c-3000-4ba2-8280-fa210c5d4931
+    _name: Testing
+    _taskIds: []
+    _scrollPosition: {x: 0, y: 0}
+    _treeWindow_SearchShow: 1
+    TreeWindowShowAnimation:
+      m_Target: 0
+      speed: 2
+      m_Value: 0
+    _treeWindow_ShowTasks: 0
+  - _id: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-8a4717ca-9348-46a6-a196-1693d130e2e4
+    _boardID: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-5455b91c-3000-4ba2-8280-fa210c5d4931
+    _name: Completed
+    _taskIds: []
     _scrollPosition: {x: 0, y: 0}
     _treeWindow_SearchShow: 1
     TreeWindowShowAnimation:

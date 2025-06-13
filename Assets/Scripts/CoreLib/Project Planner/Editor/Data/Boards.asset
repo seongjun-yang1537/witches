@@ -15,10 +15,21 @@ MonoBehaviour:
   _all:
   - _id: 04e3fe181f79a711952e1155fc0af6cc92647696-15511c80-e864-4bc6-991b-3e9e94ddb6ef
     _name: Board
+    _groupIds: []
+    _scrollPosition: {x: 0, y: 0}
+    _treeWindow_SearchShow: 1
+    treeWindowShowGroupsAnimation:
+      m_Target: 0
+      speed: 2
+      m_Value: 0
+    _treeWindow_ShowGroups: 0
+  - _id: eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-5455b91c-3000-4ba2-8280-fa210c5d4931
+    _name: Board1
     _groupIds:
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-5d68f7f6-bb5d-461c-822d-b236eb391734
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-548f0e41-12aa-415c-9570-e5c9568c7259
-    - 04e3fe181f79a711952e1155fc0af6cc92647696-39d6769b-b110-4a65-81fe-dddfdbec0fb2
+    - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-9d49945d-4b09-49d7-8a24-e217ed7ebf56
+    - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-d2b55abd-e388-4bb6-a4a4-17ce599d8ab9
+    - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-ac681197-04e1-4fc7-852d-a295cb2b0766
+    - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-8a4717ca-9348-46a6-a196-1693d130e2e4
     _scrollPosition: {x: 0, y: 0}
     _treeWindow_SearchShow: 1
     treeWindowShowGroupsAnimation:
