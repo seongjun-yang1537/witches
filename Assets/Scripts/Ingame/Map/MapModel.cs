@@ -3,6 +3,7 @@ using System.Linq;
 using Corelib.SUI;
 using Corelib.Utils;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace Ingame
 {
@@ -12,7 +13,7 @@ namespace Ingame
         public Transform entities;
         public Transform envirnoment;
 
-        private List<AgentModel> agentModels = new();
+        public List<AgentModel> agentModels = new();
 
         public Vector3Int size;
         private MT19937 rng { get => GameManager.Instance.rng; }
@@ -49,7 +50,15 @@ namespace Ingame
         {
             foreach (var agentModel in agentModels)
             {
-                agentModel.OnPhase();
+                switch (phase)
+                {
+                    case GamePhase.Move:
+                        agentModel.OnMovePhase();
+                        break;
+                    case GamePhase.Attack:
+                        agentModel.OnAttackPhase();
+                        break;
+                }
             }
         }
 
@@ -60,10 +69,10 @@ namespace Ingame
                 switch (phase)
                 {
                     case GamePhase.Move:
-                        agentModel.OnMovePhase(progress);
+                        agentModel.OnMovePhaseProgress(progress);
                         break;
                     case GamePhase.Attack:
-                        agentModel.OnAttackPhase(progress);
+                        agentModel.OnAttackPhaseProgress(progress);
                         break;
                 }
             }

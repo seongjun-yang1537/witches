@@ -20,8 +20,8 @@ namespace Ingame
     public class GameManager : Singleton<GameManager>
     {
         private readonly Dictionary<GamePhase, float> phaseDurations = new(){
-            {GamePhase.Move, 5.0f},
-            {GamePhase. Attack, 1.0f},
+            {GamePhase.Move, 3.0f},
+            {GamePhase. Attack, 0.25f},
         };
 
         public float nowPhaseDuration { get => phaseDurations[phase]; }
@@ -30,7 +30,7 @@ namespace Ingame
         public UnityEvent<float> onPhaseProgress = new();
         public UnityEvent onPhaseEnd = new();
 
-        public List<AgentModel> agentModels;
+        public List<AgentModel> agentModels { get => mapModel.agentModels; }
         [SerializeField]
         public Dictionary<AgentTeam, int> teamCount;
 
@@ -184,6 +184,11 @@ namespace Ingame
             }
 
             return null;
+        }
+
+        public void DeadAgent(AgentModel agentModel)
+        {
+            agentModels.Remove(agentModel);
         }
     }
 }

@@ -217,8 +217,12 @@ MonoBehaviour:
   team: 0
   agentType: 0
   life: 0
-  lifeMax: 0
+  lifeMax: 10000
+  range: 10
+  attackPower: 1
+  attackSpeed: 0.5
   speed: 3
+  attackDelay: 0
   onChangeState:
     m_PersistentCalls:
       m_Calls: []

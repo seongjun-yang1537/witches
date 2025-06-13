@@ -104,11 +104,11 @@ namespace Ingame
             Vector3 projectionPosition = new Vector3(mousePosition.x, mousePosition.y, zDepth);
             Vector3 worldPosition = camera.ScreenToWorldPoint(projectionPosition);
 
-            selectedPlayer.targetPosition = new Vector3(
+            selectedPlayer.SetTargetPosition(new Vector3(
                 worldPosition.x,
                 handle.position.y,
                 worldPosition.z
-            );
+            ));
         }
 
         private void OnMouseUpHandle()
