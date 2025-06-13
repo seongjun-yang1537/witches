@@ -1765,7 +1765,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 55
 --- !u!114 &1483292706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2284,9 +2284,9 @@ MonoBehaviour:
   onPhaseEnd:
     m_PersistentCalls:
       m_Calls: []
-  mapModel: {fileID: 619811771}
+  mapModel: {fileID: 0}
   selectedPlayer: {fileID: 0}
-  seed: -1
+  seed: 0
   gameOver: 0
 --- !u!1001 &2103378524
 PrefabInstance:
