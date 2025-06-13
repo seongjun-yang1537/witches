@@ -39,6 +39,7 @@ namespace Ingame
 
         public Simulation simulation;
 
+        [SerializeField]
         public GamePhase phase { get; private set; } = GamePhase.Move;
         public GameOverType gameover;
 
@@ -62,13 +63,16 @@ namespace Ingame
             {
                 case GamePhase.Move:
                     simulation.OnMovePhase();
+                    onPhaseProgress.Invoke(phase, 0f);
                     break;
                 case GamePhase.MoveProgress:
                     float progress = 1 - (phaseProgressTime / phaseDurations[GamePhase.MoveProgress]);
                     simulation.OnMoveProgressPhase(progress);
+                    onPhaseProgress.Invoke(phase, progress);
                     break;
                 case GamePhase.Attack:
                     simulation.OnAttackPhase();
+                    onPhaseProgress.Invoke(phase, 0f);
                     break;
             }
             phaseProgressTime -= Time.deltaTime;
@@ -117,7 +121,7 @@ namespace Ingame
             onPhaseEnd.Invoke(GamePhase.MoveProgress);
         }
 
-        private IEnumerable AttackPhase()
+        private IEnumerator AttackPhase()
         {
             SetPhase(GamePhase.Attack);
             onPhaseStart.Invoke(GamePhase.Attack);

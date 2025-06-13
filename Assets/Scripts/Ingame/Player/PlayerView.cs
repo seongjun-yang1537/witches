@@ -6,12 +6,7 @@ namespace Ingame
     [RequireComponent(typeof(PlayerModel))]
     public class PlayerView : AgentView
     {
-        protected PlayerModel playerModel;
-
-        protected void Awake()
-        {
-            base.Awake();
-            playerModel = agentModel as PlayerModel;
-        }
+        private PlayerModel _playerModel;
+        protected PlayerModel playerModel { get => _playerModel ??= GetComponent<PlayerModel>(); }
     }
 }

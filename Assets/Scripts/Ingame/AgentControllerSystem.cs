@@ -1,10 +1,15 @@
+using UnityEditor.Experimental;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Ingame
 {
     [RequireComponent(typeof(Simulation))]
     public class AgentControllerSystem : SimulationBehaviour
     {
+        public UnityEvent<AgentController> onSelect = new();
+        public UnityEvent<AgentController> onDeSelect = new();
+
         public AgentController selectedAgent;
 
         private Camera mainCameara;
@@ -21,12 +26,19 @@ namespace Ingame
 
         public override void OnMovePhaseEnd()
         {
+            onDeSelect.Invoke(null);
             selectedAgent = null;
         }
 
         public override void OnAttackPhase()
         {
             UpdateSelectedAgent();
+        }
+
+        public override void OnAttackPhaseEnd()
+        {
+            onDeSelect.Invoke(null);
+            selectedAgent = null;
         }
 
         private void UpdateSelectedAgent()
@@ -42,14 +54,14 @@ namespace Ingame
         {
             if (selectedAgent != null)
             {
-                selectedAgent.DeSelect();
+                onDeSelect.Invoke(selectedAgent);
                 if (selectedAgent == agent)
                 {
                     selectedAgent = null;
                     return;
                 }
             }
-            agent.Select();
+            onSelect.Invoke(agent);
             selectedAgent = agent;
         }
 

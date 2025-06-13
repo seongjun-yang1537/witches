@@ -3,19 +3,14 @@ using UnityEngine;
 namespace Ingame
 {
     [RequireComponent(typeof(AgentModel))]
-    public class AgentController : MonoBehaviour
+    public class AgentController : SimulationBehaviour
     {
         private AgentModel _agentModel;
         public AgentModel AgentModel { get => _agentModel ??= GetComponent<AgentModel>(); }
 
-        public virtual void Select()
+        public override void OnMovePhaseStart()
         {
-
-        }
-
-        public virtual void DeSelect()
-        {
-
+            AgentModel.SetTargetPosition(transform.position + 3 * transform.forward);
         }
 
         public void Shoot(AgentModel target)

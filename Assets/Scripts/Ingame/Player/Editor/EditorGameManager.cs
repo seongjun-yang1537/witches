@@ -12,5 +12,11 @@ namespace Ingame
         {
             script = (GameManager)target;
         }
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            SEditorGUILayout.Enum("Pahse", script.phase).Render();
+        }
     }
 }

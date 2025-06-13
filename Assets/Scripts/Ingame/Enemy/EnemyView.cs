@@ -6,12 +6,7 @@ namespace Ingame
     [RequireComponent(typeof(EnemyModel))]
     public class EnemyView : AgentView
     {
-        protected EnemyModel enemyModel;
-
-        protected void Awake()
-        {
-            base.Awake();
-            enemyModel = agentModel as EnemyModel;
-        }
+        private EnemyModel _enemyModel;
+        protected EnemyModel enemyModel { get => _enemyModel ??= GetComponent<EnemyModel>(); }
     }
 }
