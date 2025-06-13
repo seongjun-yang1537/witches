@@ -1,5 +1,3 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -25,7 +23,6 @@ namespace Corelib.SUI
 
         public virtual void Render() => onRender?.Invoke();
 
-        public virtual float GetElementHeight() => EditorGUIUtility.singleLineHeight;
 
         public static SUIElement operator |(SUIElement element, UnityAction<SUIElement> render)
         {

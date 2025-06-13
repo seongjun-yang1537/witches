@@ -49,5 +49,8 @@ namespace Corelib.Utils
         {
             gameObject.transform.SetHideFlagWithChild(hideFlags);
         }
+
+        public static bool HasComponent<T>(this GameObject gameObject) where T : MonoBehaviour
+            => gameObject.GetComponent<T>() != null;
     }
 }

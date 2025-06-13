@@ -64,5 +64,8 @@ namespace Corelib.SUI
                 EditorGUI.ProgressBar(rect, value, label);
                 EditorGUILayout.EndVertical();
             });
+
+        public static SEditorGUILayoutEnum Enum(string label, Enum value)
+            => new SEditorGUILayoutEnum(label, value);
     }
 }

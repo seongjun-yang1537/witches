@@ -16,6 +16,7 @@ namespace Corelib.Utils
             {
                 if (isApplicationQuitting)
                 {
+                    Debug.LogWarning($"[Singleton] Instance '{typeof(T)}' already destroyed on application quit. Won't create again - returning null.");
                     return null;
                 }
 
@@ -27,6 +28,7 @@ namespace Corelib.Utils
 
                         if (FindObjectsOfType(typeof(T)).Length > 1)
                         {
+                            Debug.LogError($"[Singleton] Something went really wrong - there should never be more than 1 singleton! Reopening the scene might fix it.");
                             return _instance;
                         }
 
@@ -38,6 +40,12 @@ namespace Corelib.Utils
 
                             if (((Singleton<T>)(object)_instance).ShouldPersist)
                                 DontDestroyOnLoad(singletonObject);
+
+                            Debug.Log($"[Singleton] An instance of {typeof(T)} is needed in the scene, so '{singletonObject.name}' was created with DontDestroyOnLoad.");
+                        }
+                        else
+                        {
+                            Debug.Log($"[Singleton] Using instance already created: {_instance.gameObject.name}");
                         }
                     }
 

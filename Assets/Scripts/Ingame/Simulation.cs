@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Corelib.SUI;
 using Corelib.Utils;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Ingame
@@ -30,6 +32,11 @@ namespace Ingame
         {
             entitiesTrnasform = transform.FindInChild("entities");
             envirnomentTransform = transform.FindInChild("envirnoment");
+
+            entitiesTrnasform.Cast<Transform>()
+                .Select(t => t.gameObject)
+                .Where(go => go.HasComponent<AgentController>())
+                .ForEach(go => SetupAgentObject(go));
         }
 
         private Vector3 SelectRandomSpawnPosition()
@@ -48,10 +55,16 @@ namespace Ingame
             tr.SetParent(entitiesTrnasform);
             tr.position = SelectRandomSpawnPosition();
 
-            AgentController agent = go.GetComponent<AgentController>();
-            go.name = $"[{agent.agentModel.team}]{agentType}";
+            SetupAgentObject(go);
+        }
 
-            agents.Add(agent);
+        private void SetupAgentObject(GameObject gameObject)
+        {
+            AgentController agentController = gameObject.GetComponent<AgentController>();
+            AgentModel agentModel = agentController.agentModel;
+            gameObject.name = $"[{agentModel.team}]{agentModel.agentType}";
+
+            agents.Add(agentController);
         }
 
         private void OnDrawGizmos()

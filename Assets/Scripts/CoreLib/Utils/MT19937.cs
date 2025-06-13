@@ -60,10 +60,6 @@ namespace Corelib.Utils
         {
             return NextUInt() * (1.0f / 4294967295.0f);
         }
-        public float NextFloat(float min, float max)
-        {
-            return min + (max - min) * NextFloat();
-        }
 
         public int NextInt(int min, int max)
         {

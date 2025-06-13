@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -27,5 +28,8 @@ namespace Corelib.SUI
 
         public static SGUILayoutButton Button(string label)
             => new SGUILayoutButton(label);
+
+        public static SGUILayoutSelectionGrid SelectionGrid(int value, List<GUIContent> guiContents, int columnCount = 1)
+            => new SGUILayoutSelectionGrid(value, guiContents, columnCount);
     }
 }

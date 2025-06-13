@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keys:
   - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-7641b145-24d5-40c2-94ae-060cf185ee3d
+  - eb1d49a671b8b4145ff07bdf36e3f5c7a7518754-4936aee5-43ad-450b-a2ee-c66cdb17dd05
   _values:
   - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.5019608, b: 0, a: 1}
