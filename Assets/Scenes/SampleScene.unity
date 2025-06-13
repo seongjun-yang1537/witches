@@ -230,12 +230,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 619811769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e70a1476976b9b45b64c18abb8e5bbd, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c9885926d6715b4f8a7070c3f8a0164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   entities: {fileID: 0}
   envirnoment: {fileID: 0}
   size: {x: 50, y: 10, z: 50}
+=======
+  mapModel: {fileID: 0}
+  seed: 0
+>>>>>>> Stashed changes
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,11 +703,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4ce4594adf166748b0eb7e6047b0cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   agentModels: []
   mapModel: {fileID: 0}
   mapBody: {fileID: 619811770}
   mapSize: {x: 50, y: 10, z: 50}
   seed: 0
+=======
+  onPhase:
+    m_PersistentCalls:
+      m_Calls: []
+  onPhaseProgress:
+    m_PersistentCalls:
+      m_Calls: []
+  onPhaseEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  mapModel: {fileID: 0}
+  selectedPlayer: {fileID: 0}
+  seed: -1
+  gameOver: 0
+>>>>>>> Stashed changes
 --- !u!1001 &2103378524
 PrefabInstance:
   m_ObjectHideFlags: 0

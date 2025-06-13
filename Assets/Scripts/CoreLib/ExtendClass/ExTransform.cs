@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 namespace Corelib.Utils
 {
@@ -76,6 +77,17 @@ namespace Corelib.Utils
                 child.hideFlags = hideFlags;
             }
             transform.hideFlags = hideFlags;
+        }
+
+        public static Transform FindInChild(this Transform transform, string name)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform child = transform.GetChild(i);
+                if (child.name == name)
+                    return child;
+            }
+            return null;
         }
     }
 }

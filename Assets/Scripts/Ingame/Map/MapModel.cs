@@ -5,17 +5,38 @@ using UnityEngine;
 namespace Ingame
 {
 
-    public class MapModel : MonoBehaviour
+    public class MapModel : SimulationBehaviour
     {
         public Transform entities;
         public Transform envirnoment;
 
+<<<<<<< Updated upstream
         public Vector3Int size;
         private MT19937 rng { get => GameManager.Instance.rng; }
+=======
+        public List<AgentModel> agentModels = new();
+        public List<AgentController> agentControllers = new();
+
+        public Vector3Int size;
+>>>>>>> Stashed changes
 
         protected void Awake()
         {
+            base.Awake();
+
             InitializeGroups();
+<<<<<<< Updated upstream
+=======
+
+            agentModels = entities.Cast<Transform>()
+                .Select(child => child.GetComponent<AgentModel>())
+                .Where(agentModel => agentModel != null)
+                .ToList();
+            agentControllers = entities.Cast<Transform>()
+                .Select(child => child.GetComponent<AgentController>())
+                .Where(agentController => agentController != null)
+                .ToList();
+>>>>>>> Stashed changes
         }
 
         private void InitializeGroups()
@@ -42,6 +63,7 @@ namespace Ingame
                 rng.NextFloat(-size.y / 2, size.y / 2),
                 rng.NextFloat(-size.z / 2, size.z / 2)
             ));
+
 
         public void SpawnAgent(AgentType agentType)
         {
