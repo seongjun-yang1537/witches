@@ -1,0 +1,215 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec8fc9ed5606da49a6080418b8e404b, type: 3}
+  m_Name: English
+  m_EditorClassIdentifier: 
+  _about: About
+  _adaptiveMouseCursor: Adaptive mouse cursor
+  _add: Add
+  _addAndClose: Add and close
+  _all: All
+  _allowMultipleWindows: Allow multiple windows
+  _alphabetically: Alphabetically
+  _archived: Archived
+  _areYouSureYouWantToDeleteTheBoard: Are you sure you want to delete the board?
+  _areYouSureYouWantToDeleteTheColor: Are you sure you want to delete the color?
+  _areYouSureYouWantToDeleteTheGroup: Are you sure you want to delete the group?
+  _areYouSureYouWantToRemoveTheScreenshot: Are you sure you want to remove the screenshot?
+  _areYouSureYouWantToDeleteTheTag: Are you sure you want to delete the tag?
+  _areYouSureYouWantToDeleteTheTask: Are you sure you want to delete the task?
+  _areYouSureYouWantToImportTheDemoContentNoExistingDataWillBeOverwritten: Are you
+    sure you want to import the demo content? No existing data will be overwritten.
+  _areYouSureYouWantToRemoveTheAsset: Are you sure you want to remove the asset?
+  _areYouSureYouWantToResetTheSettings: Are you sure you want to reset the settings?
+  _ASC: ASC
+  _assets: Assets
+  _assigningAssets: Assigning assets
+  _autoDockToBoard: Auto dock with board
+  _autoSelectNew: Auto select new
+  _autoViewNew: Auto view new
+  _back: Back
+  _backgroundColor: Background color
+  _board: Board
+  _boardGeneral: Board general
+  _boardNameInWindowTab: Board name in window tab
+  _boardWindow: Board window
+  _cancel: Cancel
+  _codeAnalyzer: Code analyzer
+  _color: Color
+  _coloring: Coloring
+  _colors: Colors
+  _confirmRemoval: Confirm removal
+  _connect: Connect
+  _contactMe: Contact me
+  _copy: Copy
+  _created: Created
+  _defaultName: Default name
+  _defaultGroups: Default groups
+  _delete: Delete
+  _deleteGroup: Delete group
+  _deleteTask: Delete task
+  _demoContent: Demo content
+  _demoContentWasImportedSuccessfully: Demo content was imported successfully
+  _DESC: DESC
+  _description: Description
+  _descriptionFixedHeight: Description fixed height
+  _descriptionHeight: Description height
+  _descriptionIndicator: Description indicator
+  _disconnect: Disconnect
+  _dontOpenAutomaticallyWhenUpdated: Don't open automatically when updated
+  _doubleClickToFind: Double click to find
+  _download: Download
+  _DragThreshold: Drag threshold
+  _duplicate: Duplicate
+  _edit: Edit
+  _empty: Empty
+  _enabled: Enabled
+  _export: Export
+  _exportToGloBoards: Export to Glo Boards
+  _fixedHeight: Fixed height
+  _fixedWidth: Fixed width
+  _foldoutAnimation: Foldout animation
+  _foldoutOpenByDefault: Foldout open by default
+  _forceCloseProjectPlanner: Force close project planner
+  _goTo: Go to
+  _grid: Grid
+  _group: Group
+  _groupGeneral: Group general
+  _groupLayout: Group layout
+  _height: Height
+  _hideEmptyWhenSearching: Hide empty when searching
+  _hideFiles: Hide files
+  _hideUIWhenDragging: Hide UI when dragging
+  _iconType: Icon type
+  _identityCode: Identity code
+  _import: Import
+  _includeFileNameInSearch: Include file name in search
+  _importCompleted: Import completed
+  _importDemoContent: Import demo content
+  _language: Language
+  _layout: Layout
+  _line: Line
+  _lock: Lock
+  _lockAll: Lock all
+  _lockColor: Lock color
+  _locked: Locked
+  _lockIncludingSubtasks: Lock including subtasks
+  _locking: Locking
+  _lockingTasks: Locking tasks
+  _lockTasks: Lock tasks
+  _makeTask: Make task
+  _manual: Manual
+  _minHeight: Min height
+  _minimumHeight: Minimum height
+  _minimumWidth: Minimum width
+  _moveDown: Move down
+  _moveLeft: Move left
+  _moveRight: Move right
+  _moveToBoard: Move to board
+  _moveToGroup: Move to group
+  _moveUp: Move up
+  _name: Name
+  _newBoard: New board
+  _newGroup: New group
+  _newSubtask: New subtask
+  _newTask: New task
+  _no: No
+  _normal: Normal
+  _NONAME: NO NAME
+  _none: None
+  _noTaskSelected: No task selected
+  _others: Others
+  _ok: OK
+  _open: Open
+  _openManual: Open manual
+  _openSettings: Open settings
+  _password: Password
+  _pasteAsSubtask: Paste as subtask
+  _pasteAsNew: Paste as new
+  _pasteGroup: Paste group
+  _pasteTask: Paste task
+  _placeNew: Place new
+  _prefix: Prefix
+  _progress: Progress
+  _projectName: Project name
+  _quickTask: Quick task
+  _refresh: Refresh
+  _rename: Rename
+  _reset: Reset
+  _resetSettings: Reset rettings
+  _search: Search
+  _searchByColor: Search by color
+  _searchByTag: Search by tag
+  _settings: Settings
+  _sort: Sort
+  _showByDefault: Show by default
+  _showDescriptionIndicator: Show description indicator
+  _showIndicator: Show indicator
+  _showIndividualProgress: Show individual progress
+  _showLocks: Show locks
+  _showSelectFileButton: Show select file button
+  _showScanWordWithMessage: Show scan word with message
+  _showProgress: Show progress
+  _showProgressBar: Show progress bar
+  _showProgressInBoardWindow: Show progress in board window
+  _showTimestamps: Show timestamps
+  _showWindowTitleIcons: Show window title icons
+  _scan: Scan
+  _scanAfterCompiling: Scan after compiling
+  _scanOnWindowOpen: Scan on window open
+  _scanWords: Scan words
+  _scanWordsAreCaseSensitive: Scan words are case sensitive
+  _screenshot: Screenshot
+  _screenshots: Screenshots
+  _sublockColor: Sublock color
+  _submit: Submit
+  _subtasks: Subtasks
+  _subtaskColor: Subtask color
+  _support: Support
+  _supportUndo: Support undo
+  _tag: Tag
+  _tags: Tags
+  _task: Task
+  _taskGeneral: Task general
+  _taskHasAllSelected: Task has all selected
+  _taskMinHeight: Task min height
+  _taskWindow: Task window
+  _utility: Utility
+  _utilityWindow: Utility window
+  _updated: Updated
+  _upload: Upload
+  _unlock: Unlock
+  _unlockAll: Unlock all
+  _unlockIncludingSubtasks: Unlock including subtasks
+  _unlockTasks: Unlock tasks
+  _username: Username
+  _useThreads: Use threads
+  _view: View
+  _width: Width
+  _remove: Remove
+  _working: Working
+  _yes: Yes
+  _youHaveToCreateALeastOneBoardToUseTheQuickTaskWindow: You have to create a least
+    one board to use the quick task window.
+  _youHaveToSelectABoardWithAtLeastOneGroupInItToUseTheQuickTaskWindow: You have
+    to select a board with at least one group in it to use the quick task window.
+  _rowColoring: Row coloring
+  _even: Even
+  _odd: Odd
+  _subtask: Subtask
+  _rowStyle: Row style
+  _treeView: Tree view
+  _treeWindow: Tree window
+  _find: Find
+  _findNotImplementedException: Find not implemented exception
+  _selectableMessage: Selectable message
+  _selectFile: Select file
