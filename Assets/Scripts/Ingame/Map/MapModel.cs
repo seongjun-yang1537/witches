@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Corelib.SUI;
 using Corelib.Utils;
 using UnityEngine;
@@ -10,23 +12,16 @@ namespace Ingame
         public Transform entities;
         public Transform envirnoment;
 
-<<<<<<< Updated upstream
-        public Vector3Int size;
-        private MT19937 rng { get => GameManager.Instance.rng; }
-=======
         public List<AgentModel> agentModels = new();
         public List<AgentController> agentControllers = new();
 
         public Vector3Int size;
->>>>>>> Stashed changes
 
         protected void Awake()
         {
             base.Awake();
 
             InitializeGroups();
-<<<<<<< Updated upstream
-=======
 
             agentModels = entities.Cast<Transform>()
                 .Select(child => child.GetComponent<AgentModel>())
@@ -36,7 +31,6 @@ namespace Ingame
                 .Select(child => child.GetComponent<AgentController>())
                 .Where(agentController => agentController != null)
                 .ToList();
->>>>>>> Stashed changes
         }
 
         private void InitializeGroups()

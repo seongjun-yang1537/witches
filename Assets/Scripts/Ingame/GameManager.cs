@@ -1,24 +1,9 @@
-<<<<<<< Updated upstream
-using System.Collections.Generic;
-using Corelib.SUI;
-=======
 using System.Collections;
 using System.Collections.Generic;
->>>>>>> Stashed changes
+using Corelib.SUI;
 using Corelib.Utils;
 using UniRx;
 using UnityEngine;
-<<<<<<< Updated upstream
-using UnityEngine.Rendering;
-
-namespace Ingame
-{
-    public class GameManager : Singleton<GameManager>
-    {
-        public List<AgentModel> agentModels;
-        [SerializeField]
-        public Dictionary<AgentTeam, int> teamCount;
-=======
 using UnityEngine.Events;
 
 namespace Ingame
@@ -53,24 +38,10 @@ namespace Ingame
         public UnityEvent<GamePhase> onPhaseEnd = new();
 
         public Simulation simulation;
->>>>>>> Stashed changes
 
         public GamePhase phase { get; private set; } = GamePhase.Move;
         public GameOverType gameover;
 
-<<<<<<< Updated upstream
-
-        public Transform mapBody;
-        public Vector3Int mapSize;
-
-        public int seed;
-        public MT19937 rng;
-
-        protected void Awake()
-        {
-            if (seed == -1) rng = MT19937.Create();
-            else rng = MT19937.Create(seed);
-=======
         public bool triggerNextPhase;
         public float phaseProgressTime;
 
@@ -160,7 +131,6 @@ namespace Ingame
         public GameOverType GetGameOverState()
         {
             return GameOverType.None;
->>>>>>> Stashed changes
         }
     }
 }

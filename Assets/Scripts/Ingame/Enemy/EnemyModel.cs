@@ -6,13 +6,11 @@ namespace Ingame
     public class EnemyModel : AgentModel
     {
 
-<<<<<<< Updated upstream
-=======
-        private void Awake()
-        {
-            int seed = (int)(DateTime.Now.Ticks & 0xFFFFFFFF);
-            rng = MT19937.Create(gameObject.GetInstanceID() + seed);
-        }
+        // private void Awake()
+        // {
+        //     int seed = (int)(DateTime.Now.Ticks & 0xFFFFFFFF);
+        //     rng = MT19937.Create(gameObject.GetInstanceID() + seed);
+        // }
 
         // public override void OnMovePhase()
         // {
@@ -26,6 +24,5 @@ namespace Ingame
 
         //     SetTargetPosition(randomNormal * randomDelta);
         // }
->>>>>>> Stashed changes
     }
 }

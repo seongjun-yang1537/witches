@@ -11,11 +11,6 @@ namespace Ingame
 
         public float speed;
 
-<<<<<<< Updated upstream
-        protected void Awake()
-        {
-
-=======
         public AgentModel aimtarget;
         public Vector3 aimDirection;
 
@@ -25,7 +20,6 @@ namespace Ingame
         protected void Start()
         {
             life = lifeMax;
->>>>>>> Stashed changes
         }
     }
 }
