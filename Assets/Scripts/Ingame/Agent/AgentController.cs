@@ -13,6 +13,7 @@ namespace Ingame
         {
             Vector3 targetPosition = transform.position + AgentModel.planeSpec.minLength * transform.forward;
             AgentModel.SetTargetPosition(targetPosition);
+            AgentModel.SetAimDirection(targetPosition);
         }
 
         public void MoveByTrajectory(float ratio)

@@ -8,15 +8,16 @@ using UnityEngine;
 
 namespace Ingame
 {
-    public class FightTrajectory3DUI : SimulationBehaviour
+    public class FightShot3DUI : SimulationBehaviour
     {
         public AgentControllerSystem system;
 
         public Transform handle;
-        public LineRenderer lineRenderer;
 
         private AgentController selectedeAgent { get => system.selectedAgent; }
         private AgentModel agentModel { get => selectedeAgent.AgentModel; }
+
+        public float radius { get => agentModel.radius; }
 
         private Camera mainCamera;
 
@@ -36,36 +37,37 @@ namespace Ingame
         public void SetActiveUI(bool active)
         {
             handle.gameObject.SetActive(active);
-            lineRenderer.gameObject.SetActive(active);
         }
 
-        public override void OnMovePhaseStart()
+        public override void OnAttackPhaseStart()
         {
             SetActiveUI(true);
         }
 
-        public override void OnMovePhase()
+        public override void OnAttackPhase()
         {
             SetActiveUI(selectedeAgent != null);
 
             if (selectedeAgent == null) return;
             UpdateHandle();
 
-            handle.transform.position = agentModel.targetPosition;
-
-            Trajectory trajectory = agentModel.trajectory;
-            lineRenderer.positionCount = trajectory.Count;
-            lineRenderer.SetPositions(trajectory.samples.ToArray());
+            Vector3 aimDirection = agentModel.aimDirection;
+            handle.transform.position = agentModel.transform.position + 1.5f * aimDirection;
+            handle.transform.eulerAngles = new Vector3(
+                90f,
+                Mathf.Atan2(aimDirection.x, aimDirection.z) * Mathf.Rad2Deg,
+                0f
+            );
         }
 
-        public override void OnMovePhaseEnd()
+        public override void OnAttackPhaseEnd()
         {
             SetActiveUI(false);
         }
 
         private void UpdateHandle()
         {
-            if (Input.GetMouseButtonDown(0) && IsClickHandle())
+            if (Input.GetMouseButtonDown(0))
                 isDraggingHandle = true;
 
             if (isDraggingHandle)
@@ -84,18 +86,9 @@ namespace Ingame
             if (groundPlane.Raycast(ray, out float enter))
             {
                 Vector3 worldPosition = ray.GetPoint(enter);
-                if (agentModel.IsCanTargetPosition(worldPosition))
-                    agentModel.SetTargetPosition(worldPosition);
+                Vector3 direciotn = (worldPosition - agentModel.transform.position).normalized;
+                agentModel.SetAimDirection(direciotn);
             }
-        }
-
-        private bool IsClickHandle()
-        {
-            Vector2 mousePosition = Input.mousePosition;
-
-            Ray ray = mainCamera.ScreenPointToRay(mousePosition);
-            RaycastHit[] hits = Physics.RaycastAll(ray, float.MaxValue, 1 << LayerMask.NameToLayer("UI"));
-            return hits.Any(hit => hit.transform == handle);
         }
     }
 }

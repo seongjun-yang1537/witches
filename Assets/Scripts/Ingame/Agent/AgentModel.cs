@@ -29,8 +29,10 @@ namespace Ingame
 
         public float speed;
 
-        public AgentModel aimtarget;
-        public Vector3 aimDirection;
+        public float radius;
+
+        public AgentModel aimtarget { get; private set; }
+        public Vector3 aimDirection { get; private set; }
 
         [SerializeField]
         public Trajectory trajectory { get; private set; }
@@ -40,6 +42,11 @@ namespace Ingame
         protected void Start()
         {
             life = lifeMax;
+        }
+
+        public void SetAimDirection(Vector3 direction)
+        {
+            aimDirection = direction.normalized;
         }
 
         public void SetTargetPosition(Vector3 targetPosition)
