@@ -16,6 +16,11 @@ namespace Ingame
             AgentModel.SetAimDirection(targetPosition);
         }
 
+        public override void OnAttackPhaseEnd()
+        {
+            Shoot(null);
+        }
+
         public void MoveByTrajectory(float ratio)
         {
             if (AgentModel.trajectory == null) return;
@@ -30,17 +35,16 @@ namespace Ingame
 
         public void Shoot(AgentModel target)
         {
-            // ProjectileContext context = new ProjectileContextBuilder()
-            //     .SetOwner(agentModel)
-            //     .SetTarget(target)
-            //     .SetDirection(agentModel.aimDirection)
-            //     .SetType("Default")
-            //     .SetDamage(agentModel.attackPower)
-            //     .SetPosition(transform.position)
-            //     .SetSpeed(3.0f)
-            //     .Build();
+            ProjectileContext context = new ProjectileContextBuilder()
+                .SetOwner(AgentModel)
+                .SetDirection(AgentModel.aimDirection)
+                .SetType("Default")
+                .SetDamage(AgentModel.attackPower)
+                .SetPosition(transform.position)
+                .SetSpeed(3.0f)
+                .Build();
 
-            // ProjectileManager.Instance.Shoot(context);
+            ProjectileManager.Instance.Shoot(context);
         }
     }
 }

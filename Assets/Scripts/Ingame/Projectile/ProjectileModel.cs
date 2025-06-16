@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Ingame
 {
 
-    public class ProjectileModel : MonoBehaviour
+    public class ProjectileModel : SimulationBehaviour
     {
         public AgentModel owner;
         public AgentModel target;
@@ -23,6 +23,11 @@ namespace Ingame
             this.speed = context.speed;
             this.damage = context.damage;
             this.type = context.type;
+        }
+
+        public override void OnMoveProgressPhase(float progress)
+        {
+
         }
     }
 }

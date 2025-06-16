@@ -31,6 +31,8 @@ namespace Ingame
 
         public float radius;
 
+        public float attackPower;
+
         public AgentModel aimtarget { get; private set; }
         public Vector3 aimDirection { get; private set; }
 
