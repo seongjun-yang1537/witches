@@ -23,7 +23,7 @@ namespace Ingame
             phaseIcons[phase].gameObject.SetActive(true);
         }
 
-        public override void OnPhaseProgress(GamePhase phase, float progress)
+        public override void OnPhaseProgress(GamePhase phase, float progress, float deltaProgress)
         {
             imgRadial.fillAmount = progress;
         }

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Corelib.Utils;
 using UnityEngine;
 
@@ -78,6 +79,7 @@ namespace Ingame
             Transform tr = go.transform;
             tr.SetParent(transform);
             tr.position = context.position;
+            tr.rotation = Quaternion.LookRotation(context.direction, Vector3.up);
 
             ProjectileModel model = go.GetComponent<ProjectileModel>();
             model.FromContext(context);

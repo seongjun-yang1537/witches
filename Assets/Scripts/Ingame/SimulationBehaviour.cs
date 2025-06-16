@@ -34,16 +34,16 @@ namespace Ingame
                 }
             });
 
-            gameManager.onPhaseProgress.AddListener((phase, progress) =>
+            gameManager.onPhaseProgress.AddListener((phase, progress, deltaProgress) =>
             {
-                OnPhaseProgress(phase, progress);
+                OnPhaseProgress(phase, progress, deltaProgress);
                 switch (phase)
                 {
                     case GamePhase.Move:
                         OnMovePhase();
                         break;
                     case GamePhase.MoveProgress:
-                        OnMoveProgressPhase(progress);
+                        OnMoveProgressPhase(progress, deltaProgress);
                         break;
                     case GamePhase.Attack:
                         OnAttackPhase();
@@ -70,7 +70,7 @@ namespace Ingame
         }
 
         public virtual void OnPhaseStart(GamePhase phase) { }
-        public virtual void OnPhaseProgress(GamePhase phase, float progress) { }
+        public virtual void OnPhaseProgress(GamePhase phase, float progress, float deltaProgress) { }
         public virtual void OnPhaseEnd(GamePhase phase) { }
 
         public virtual void OnMovePhaseStart() { }
@@ -81,7 +81,7 @@ namespace Ingame
 
         public virtual void OnMoveProgressPhaseStart() { }
 
-        public virtual void OnMoveProgressPhase(float progress) { }
+        public virtual void OnMoveProgressPhase(float progress, float deltaProgress) { }
         public virtual void OnMoveProgressPhaseEnd() { }
 
 

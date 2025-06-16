@@ -29,7 +29,7 @@ namespace Ingame
             InitializeTransforms();
         }
 
-        public override void OnMoveProgressPhase(float progress)
+        public override void OnMoveProgressPhase(float progress, float deltaProgress)
         {
             foreach (var agent in agents)
                 agent.MoveByTrajectory(progress);

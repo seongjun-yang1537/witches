@@ -16,7 +16,7 @@ namespace Ingame
 
         public float Length { get => GetLength(); }
 
-        private Trajectory()
+        public Trajectory()
         {
             samples = new List<Vector3>();
         }
@@ -60,6 +60,23 @@ namespace Ingame
                 !CheckSampleAngles(planeSpec, trajectory.samples)
             )
                 trajectory.Clear();
+
+            return trajectory;
+        }
+
+        public static Trajectory CreateStraight(
+            Vector3 startPosition,
+            Vector3 endPosition
+        )
+        {
+            Trajectory trajectory = new();
+
+            Vector3 delta = endPosition - startPosition;
+            for (int i = 0; i < SAMPLES; i++)
+            {
+                float ratio = 1.0f * i / SAMPLES;
+                trajectory.samples.Add(startPosition + delta * ratio);
+            }
 
             return trajectory;
         }

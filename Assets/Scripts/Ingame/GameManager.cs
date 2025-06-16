@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Corelib.SUI;
 using Corelib.Utils;
-using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -34,7 +32,7 @@ namespace Ingame
 
 
         public UnityEvent<GamePhase> onPhaseStart = new();
-        public UnityEvent<GamePhase, float> onPhaseProgress = new();
+        public UnityEvent<GamePhase, float, float> onPhaseProgress = new();
         public UnityEvent<GamePhase> onPhaseEnd = new();
 
         public Simulation simulation;
@@ -45,6 +43,13 @@ namespace Ingame
 
         public bool triggerNextPhase;
         public float phaseProgressTime;
+
+        float prevProgress = 0f;
+
+        protected void Awake()
+        {
+            onPhaseEnd.AddListener(phase => prevProgress = 0f);
+        }
 
         protected void Start()
         {
@@ -63,16 +68,20 @@ namespace Ingame
             {
                 case GamePhase.Move:
                     simulation.OnMovePhase();
-                    onPhaseProgress.Invoke(phase, 0f);
+                    onPhaseProgress.Invoke(phase, 0f, 0f);
                     break;
                 case GamePhase.MoveProgress:
                     float progress = 1 - (phaseProgressTime / phaseDurations[GamePhase.MoveProgress]);
-                    simulation.OnMoveProgressPhase(progress);
-                    onPhaseProgress.Invoke(phase, progress);
+                    float deltaProgress = progress - prevProgress;
+
+                    simulation.OnMoveProgressPhase(progress, deltaProgress);
+                    onPhaseProgress.Invoke(phase, progress, deltaProgress);
+
+                    prevProgress = progress;
                     break;
                 case GamePhase.Attack:
                     simulation.OnAttackPhase();
-                    onPhaseProgress.Invoke(phase, 0f);
+                    onPhaseProgress.Invoke(phase, 0f, 0f);
                     break;
             }
             phaseProgressTime -= Time.deltaTime;

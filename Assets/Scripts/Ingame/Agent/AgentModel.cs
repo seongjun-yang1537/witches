@@ -51,15 +51,23 @@ namespace Ingame
             aimDirection = direction.normalized;
         }
 
-        public void SetTargetPosition(Vector3 targetPosition)
+        public void SetTargetPosition(Vector3 targetPosition, string type = "")
         {
-            Trajectory newTrajectory = Trajectory.CreateLine(
-                planeSpec,
-                transform.position,
-                transform.forward,
-                targetPosition
-            );
-
+            Trajectory newTrajectory = new();
+            switch (type)
+            {
+                case "straight":
+                    newTrajectory = Trajectory.CreateStraight(transform.position, targetPosition);
+                    break;
+                default:
+                    newTrajectory = Trajectory.CreateLine(
+                                    planeSpec,
+                                    transform.position,
+                                    transform.forward,
+                                    targetPosition
+                                );
+                    break;
+            }
             this.trajectory = newTrajectory;
             this.targetPosition = targetPosition;
         }

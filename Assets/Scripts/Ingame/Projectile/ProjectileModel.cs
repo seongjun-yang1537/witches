@@ -25,9 +25,9 @@ namespace Ingame
             this.type = context.type;
         }
 
-        public override void OnMoveProgressPhase(float progress)
+        public override void OnMoveProgressPhase(float progress, float deltaProgress)
         {
-
+            transform.position += direction * deltaProgress * speed;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Ingame
         public override void OnMovePhaseStart()
         {
             Vector3 targetPosition = transform.position + AgentModel.planeSpec.minLength * transform.forward;
-            AgentModel.SetTargetPosition(targetPosition);
+            AgentModel.SetTargetPosition(targetPosition, "straight");
             AgentModel.SetAimDirection(targetPosition);
         }
 
@@ -40,7 +40,7 @@ namespace Ingame
                 .SetDirection(AgentModel.aimDirection)
                 .SetType("Default")
                 .SetDamage(AgentModel.attackPower)
-                .SetPosition(transform.position)
+                .SetPosition(transform.position + 1.5f * AgentModel.aimDirection)
                 .SetSpeed(3.0f)
                 .Build();
 

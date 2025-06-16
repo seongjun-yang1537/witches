@@ -86,6 +86,9 @@ namespace Ingame
             if (groundPlane.Raycast(ray, out float enter))
             {
                 Vector3 worldPosition = ray.GetPoint(enter);
+                float sqrDistance = (worldPosition - agentModel.transform.position).sqrMagnitude;
+                if (sqrDistance > 3.0f) return;
+
                 Vector3 direciotn = (worldPosition - agentModel.transform.position).normalized;
                 agentModel.SetAimDirection(direciotn);
             }
