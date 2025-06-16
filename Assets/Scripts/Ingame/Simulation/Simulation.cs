@@ -29,6 +29,12 @@ namespace Ingame
             InitializeTransforms();
         }
 
+        public override void OnMoveProgressPhase(float progress)
+        {
+            foreach (var agent in agents)
+                agent.MoveByTrajectory(progress);
+        }
+
         private void InitializeTransforms()
         {
             entitiesTrnasform = transform.FindInChild("entities");

@@ -720,22 +720,6 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 4756018727638985544, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
-    - target: {fileID: 6602335629720601062, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
-      propertyPath: planeSpec.maxSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 6602335629720601062, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
-      propertyPath: planeSpec.minSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6602335629720601062, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
-      propertyPath: planeSpec.maxGForce
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6602335629720601062, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
-      propertyPath: planeSpec.maxTurnRateDeg
-      value: 90
-      objectReference: {fileID: 0}
     - target: {fileID: 7786655349449147247, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1195,11 +1179,11 @@ PrefabInstance:
       objectReference: {fileID: 4756018727638985544, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
     - target: {fileID: 6602335629720601062, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
       propertyPath: planeSpec.maxSpeed
-      value: 20
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6602335629720601062, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
       propertyPath: planeSpec.minSpeed
-      value: 1205
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6602335629720601062, guid: a0a43778d1da8f243a96a8f22df455b0, type: 3}
       propertyPath: planeSpec.maxGForce

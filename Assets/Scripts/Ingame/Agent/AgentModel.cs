@@ -1,16 +1,17 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 namespace Ingame
 {
     [Serializable]
     public class PlaneSpec
     {
-        public float maxSpeed = 2f;
-        public float minSpeed = 0.5f;
-        public float maxTurnRateDeg = 90f;  // deg/sec
-        public float maxGForce = 5f;
+        public float minLength;
+        public float maxLength;
+
+        public float maxDegreePer;
     }
 
     public class AgentModel : MonoBehaviour
@@ -43,19 +44,26 @@ namespace Ingame
 
         public void SetTargetPosition(Vector3 targetPosition)
         {
-            this.targetPosition = targetPosition;
-
-            Vector3 handleSubVec = targetPosition - transform.position;
-            Vector3 handleDirection = handleSubVec.normalized;
-            float handleDistance = handleSubVec.magnitude;
-
-            trajectory = new(
-                handleDirection,
-                handleDistance,
+            Trajectory newTrajectory = Trajectory.CreateLine(
+                planeSpec,
                 transform.position,
                 transform.forward,
-                planeSpec
+                targetPosition
             );
+
+            this.trajectory = newTrajectory;
+            this.targetPosition = targetPosition;
+        }
+
+        public bool IsCanTargetPosition(Vector3 targetPosition)
+        {
+            Trajectory newTrajectory = Trajectory.CreateLine(
+                planeSpec,
+                transform.position,
+                transform.forward,
+                targetPosition
+            );
+            return !newTrajectory.IsEmpty;
         }
     }
 }

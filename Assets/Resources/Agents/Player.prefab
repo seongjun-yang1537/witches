@@ -214,6 +214,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7d917375c3461e4b8908d7370a8a502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  planeSpec:
+    minLength: 3
+    maxLength: 5
+    maxDegreePer: 10
   team: 0
   agentType: 0
   life: 0
@@ -221,8 +231,6 @@ MonoBehaviour:
   speed: 0
   aimtarget: {fileID: 0}
   aimDirection: {x: 0, y: 0, z: 0}
-  trajectory:
-    samples: []
 --- !u!114 &4756018727638985544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +243,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2953e90aec0159141a5c01a96218435f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
 --- !u!114 &5536884144505644870
 MonoBehaviour:
   m_ObjectHideFlags: 0
