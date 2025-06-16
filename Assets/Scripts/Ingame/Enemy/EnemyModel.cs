@@ -5,7 +5,6 @@ namespace Ingame
 
     public class EnemyModel : AgentModel
     {
-
         // private void Awake()
         // {
         //     int seed = (int)(DateTime.Now.Ticks & 0xFFFFFFFF);

@@ -46,6 +46,12 @@ namespace Ingame
             life = lifeMax;
         }
 
+        protected void Update()
+        {
+            if (life <= 0f)
+                gameObject.SetActive(false);
+        }
+
         public void SetAimDirection(Vector3 direction)
         {
             aimDirection = direction.normalized;

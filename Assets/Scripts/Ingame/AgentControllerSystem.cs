@@ -75,7 +75,7 @@ namespace Ingame
             foreach (var hit in hits)
             {
                 AgentController model = hit.transform.GetComponent<AgentController>();
-                if (model != null)
+                if (model != null && model.AgentModel.team == AgentTeam.ALLY)
                 {
                     return model;
                 }

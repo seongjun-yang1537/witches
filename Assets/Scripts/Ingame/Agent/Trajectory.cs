@@ -55,6 +55,7 @@ namespace Ingame
             }
 
             float length = trajectory.Length;
+            // TODO: 이거 직선에서 에러 나는 경우가 있음
             if (length < planeSpec.minLength ||
                 planeSpec.maxLength < length ||
                 !CheckSampleAngles(planeSpec, trajectory.samples)

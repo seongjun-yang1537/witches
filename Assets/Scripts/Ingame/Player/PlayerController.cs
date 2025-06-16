@@ -6,5 +6,10 @@ namespace Ingame
     {
         private PlayerModel _playerModel;
         protected PlayerModel PlayerModel { get => _playerModel ??= GetComponent<PlayerModel>(); }
+
+        public override void OnAttackPhaseEnd()
+        {
+            Shoot(null);
+        }
     }
 }

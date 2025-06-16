@@ -70,14 +70,14 @@ namespace Ingame
         public string type;
     }
 
-    public class ProjectileManager : Singleton<ProjectileManager>
+    public class ProjectileSystem : Singleton<ProjectileSystem>
     {
-        public ProjectileModel Shoot(ProjectileContext context)
+        public static ProjectileModel Shoot(ProjectileContext context)
         {
             GameObject go = Instantiate(ProjectileDB.Get(context.type));
 
             Transform tr = go.transform;
-            tr.SetParent(transform);
+            tr.SetParent(Instance.transform);
             tr.position = context.position;
             tr.rotation = Quaternion.LookRotation(context.direction, Vector3.up);
 
