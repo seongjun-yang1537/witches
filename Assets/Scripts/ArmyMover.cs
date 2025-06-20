@@ -57,20 +57,20 @@ public class ArmyMover : MonoBehaviour
 
             if (distance > stopDistance)
             {
-                Debug.DrawLine(transform.position, closestTarget.transform.position, Color.red);
-                Debug.Log($"[{gameObject.name}] Moving to: {closestTarget.gameObject.name} ({distance:F2}m)");
+                //Debug.DrawLine(transform.position, closestTarget.transform.position, Color.red);
+                //Debug.Log($"[{gameObject.name}] Moving to: {closestTarget.gameObject.name} ({distance:F2}m)");
 
                 Vector3 dir = toTarget.normalized;
                 transform.position += dir * speed * Time.deltaTime;
             }
             else
             {
-                Debug.Log($"[{gameObject.name}] Stopped near {closestTarget.name} (distance {distance:F2}m)");
+                //Debug.Log($"[{gameObject.name}] Stopped near {closestTarget.name} (distance {distance:F2}m)");
             }
         }
         else
         {
-            Debug.Log($"[{gameObject.name}] No target found in enemyLayer: {enemyLayer.value}");
+            //Debug.Log($"[{gameObject.name}] No target found in enemyLayer: {enemyLayer.value}");
         }
 
         // ✅ 충돌 판정

@@ -1,15 +1,15 @@
-﻿// ✅ ArmyStatus.cs - Blue는 하단, Red는 상단에 UI 표시
-
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
 public class ArmyStatus : MonoBehaviour
 {
-    public enum ArmyType { Blue, Red }
+    public enum TeamType { Blue, Red }
+    public enum UnitType { Armor, Infantry }
 
     [Header("기본 정보")]
-    public ArmyType armyType;
+    public TeamType teamType;
+    public UnitType unitType;
     public string title = "Unit";
     public float maxHP = 100f;
     public float currentHP;
@@ -46,15 +46,16 @@ public class ArmyStatus : MonoBehaviour
                 float distance = depth * 0.5f + padding;
 
                 // ✅ Blue는 뒤쪽(-forward), Red는 앞쪽(+forward) 방향에 표시
-                Vector3 direction = (armyType == ArmyType.Red) ? transform.forward : -transform.forward;
+                Vector3 direction = (teamType == TeamType.Red) ? transform.forward : -transform.forward;
                 Vector3 offset = direction * distance;
                 follower.offset = offset;
 
-                tmpText.alignment = (armyType == ArmyType.Red)
+                tmpText.alignment = (teamType == TeamType.Red)
                     ? TextAlignmentOptions.TopGeoAligned
                     : TextAlignmentOptions.BottomGeoAligned;
             }
         }
+        Debug.Log($"[{title}] 생성됨 - TeamType: {teamType}");
     }
 
     void Update()
@@ -65,10 +66,17 @@ public class ArmyStatus : MonoBehaviour
         {
             if (attacker == null) continue;
 
-            float multiplier = (armyType == ArmyType.Blue && attacker.armyType == ArmyType.Red) ? 1.5f :
-                               (armyType == ArmyType.Red && attacker.armyType == ArmyType.Blue) ? 0.7f : 1f;
+            // 🟦 유닛 타입 배율
+            float typeMultiplier = 1f;
+            if (attacker.unitType == UnitType.Armor && unitType == UnitType.Infantry)
+                typeMultiplier = 1.3f;
+            else if (attacker.unitType == UnitType.Infantry && unitType == UnitType.Armor)
+                typeMultiplier = 0.8f;
 
-            float damage = attacker.baseDamagePerSecond * multiplier * Time.deltaTime;
+            // 🟨 데미지 랜덤 ±5%
+            float randomFactor = Random.Range(0.95f, 1.05f);
+
+            float damage = attacker.baseDamagePerSecond * typeMultiplier * randomFactor * Time.deltaTime;
             currentHP -= damage;
         }
 
