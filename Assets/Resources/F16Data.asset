@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7875dd6ded5de524d99f96e5e7d50dc6, type: 3}
+  m_Name: F16Data
+  m_EditorClassIdentifier: 
+  unitName: F-16D
+  jetSprite: {fileID: 21300000, guid: c0b18f1864df41b4184bd4ab7b1dbc7c, type: 3}
+  pilotSprite: {fileID: 21300000, guid: a7b5abff32b80a448afdf0298d2121eb, type: 3}
+  description: F-16D Fighting Falcon is a good jet
+  unitPrefab: {fileID: 1802220201568324948, guid: 871e4bee8b4cca545b39a77097357c4b, type: 3}

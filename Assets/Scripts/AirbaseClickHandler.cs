@@ -1,3 +1,4 @@
+ï»¿using Ingame;
 using UnityEngine;
 
 public class AirbaseClickHandler : MonoBehaviour
@@ -17,21 +18,34 @@ public class AirbaseClickHandler : MonoBehaviour
 
         popupUI.SetActive(true);
 
-        // 1. AirbaseÀÇ Áß½ÉÀ» È­¸é ÁÂÇ¥·Î º¯È¯
+        // âœ… íŒì—…ì„ ê³„ì¸µì—ì„œ ê°€ì¥ ìœ„ë¡œ ì˜¬ë¦¬ê¸° (ë‹¤ë¥¸ UI ìœ„ì— ëœ¨ë„ë¡)
+        popupUI.transform.SetAsLastSibling();
+
+        // Airbaseì˜ ì¤‘ì‹¬ â†’ ìŠ¤í¬ë¦° ì¢Œí‘œ
         Vector3 worldPos = transform.position;
         Vector3 screenPos = mainCamera.WorldToScreenPoint(worldPos);
 
-        // 2. È­¸é ÁÂÇ¥¸¦ UI ·ÎÄÃ ÁÂÇ¥·Î º¯È¯
+        // ìŠ¤í¬ë¦° ì¢Œí‘œ â†’ UI ë¡œì»¬ ì¢Œí‘œ
         RectTransform canvasRect = popupUI.transform.parent as RectTransform;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        if (canvasRect == null)
+        {
+            Debug.LogWarning("AirbaseClickHandler: PopupUIì˜ ë¶€ëª¨ê°€ RectTransformì´ ì•„ë‹˜");
+            return;
+        }
+
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvasRect,
             screenPos,
-            null,  // Overlay ¸ğµåÀÏ °æ¿ì
-            out Vector2 localPos
-        );
+            null,  // Overlay ëª¨ë“œì¼ ê²½ìš° null
+            out Vector2 localPos))
+        {
+            Debug.LogWarning("AirbaseClickHandler: ì¢Œí‘œ ë³€í™˜ ì‹¤íŒ¨");
+            return;
+        }
 
-        // 3. ÆË¾÷ À§Ä¡ ¼³Á¤ (¿ŞÂÊ ¾Æ·¡ ²ÀÁşÁ¡ÀÌ Airbase À§Ä¡¿¡ ¿Àµµ·Ï)
+        // íŒì—… ìœ„ì¹˜ ì§€ì • (ì™¼ìª½ ì•„ë˜ ê¼­ì§“ì ì´ Airbase ìœ„ì¹˜ì— ì˜¤ë„ë¡)
         RectTransform popupRect = popupUI.GetComponent<RectTransform>();
-        popupRect.anchoredPosition = localPos;
+        if (popupRect != null)
+            popupRect.anchoredPosition = localPos;
     }
 }

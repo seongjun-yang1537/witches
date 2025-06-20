@@ -55,12 +55,17 @@ public class ArmyStatus : MonoBehaviour
                     : TextAlignmentOptions.BottomGeoAligned;
             }
         }
+
         Debug.Log($"[{title}] 생성됨 - TeamType: {teamType}");
     }
 
     void Update()
     {
         if (attackers.Count == 0) return;
+
+        // ✅ 게임이 일시정지 상태일 경우 데미지 계산 중단
+        if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
+            return;
 
         foreach (var attacker in attackers)
         {
