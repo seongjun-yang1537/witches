@@ -70,6 +70,9 @@ public class AirbasePopupUI : MonoBehaviour
         if (status != null && uiCanvas != null)
         {
             status.uiCanvas = uiCanvas;
+
+            // ✅ AirbaseItemData의 unitName → title 로 복사
+            status.title = data.unitName;
         }
 
         // ✅ 선택된 아이템 처리

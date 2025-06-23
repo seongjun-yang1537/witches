@@ -81,7 +81,7 @@ public class TargetSelectionManager : MonoBehaviour
 
             Debug.Log($"[TargetSelection] mouseWorld = {mouseWorld}");
 
-            float radius = 0.5f;
+            float radius = 1.0f;
             Collider[] hits = Physics.OverlapSphere(mouseWorld, radius, targetLayer);
 
             if (hits.Length > 0)

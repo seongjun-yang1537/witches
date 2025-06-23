@@ -4,20 +4,22 @@ using System.Collections.Generic;
 [RequireComponent(typeof(BoxCollider))]
 public class JetMover : MonoBehaviour
 {
+    [Header("이동 및 전투 설정")]
     public float speed = 4f;
     public float contactRadius = 1.0f;
     public float stopDistance = 0.6f;
     public LayerMask enemyLayer;
 
+    [Header("귀환 관련")]
     public Vector3 homePosition;
     public AirbaseItemUI originItemUI;
+    public System.Action onReturnComplete;
 
     private BoxCollider boxCollider;
     private bool isReturning = false;
     private readonly List<ArmyStatus> inContact = new();
     private Transform targetOverride = null;
-
-    public System.Action onReturnComplete;
+    private bool hasFought = false; // ✅ 중복 전투 방지용 플래그
 
     void OnEnable()
     {
@@ -32,6 +34,7 @@ public class JetMover : MonoBehaviour
     {
         if (!Application.isPlaying) return;
 
+        // ✅ 게임 일시정지 시 Update 정지
         if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
             return;
 
@@ -42,14 +45,20 @@ public class JetMover : MonoBehaviour
         }
 
         MoveTowardTarget();
-        HandleCombat();
+        HandleCombat(); // ✅ 전투 감지 및 처리
     }
 
+    /// <summary>
+    /// 외부에서 타겟 지정
+    /// </summary>
     public void SetTarget(Transform target)
     {
         targetOverride = target;
     }
 
+    /// <summary>
+    /// 타겟을 향해 이동
+    /// </summary>
     void MoveTowardTarget()
     {
         if (targetOverride == null) return;
@@ -62,42 +71,37 @@ public class JetMover : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 적과 충돌 시 전투 처리
+    /// </summary>
     void HandleCombat()
     {
-        HashSet<ArmyStatus> currentContacts = new();
+        if (hasFought) return; // ✅ 이미 전투한 경우 중복 방지
+
         Collider[] hits = Physics.OverlapSphere(transform.position, contactRadius, enemyLayer);
 
         foreach (var hit in hits)
         {
-            ArmyStatus other = hit.GetComponent<ArmyStatus>();
-            if (other != null)
+            ArmyStatus enemy = hit.GetComponent<ArmyStatus>();
+            if (enemy != null)
             {
-                currentContacts.Add(other);
-
-                if (!inContact.Contains(other))
+                // ✅ 전투 처리 핸들러 호출
+                var myStatus = GetComponent<JetStatus>();
+                if (myStatus != null)
                 {
-                    // ArmyStatus에 대한 공격자 등록 생략
-                    inContact.Add(other);
-
-                    // ✅ 첫 충돌 시 귀환 모드 전환
-                    isReturning = true;
-                    targetOverride = null;
+                    hasFought = true; // 중복 전투 방지 설정
+                    CombatResultHandler.Instance.HandleCombat(myStatus, enemy);
                 }
-            }
-        }
 
-        // 접촉이 끝난 대상 제거
-        for (int i = inContact.Count - 1; i >= 0; i--)
-        {
-            var target = inContact[i];
-            if (!currentContacts.Contains(target))
-            {
-                // ArmyStatus 제거 생략
-                inContact.RemoveAt(i);
+                // ✅ 귀환 조건은 CombatResultHandler 에서 결정
+                break;
             }
         }
     }
 
+    /// <summary>
+    /// 전투기 기지로 귀환 처리
+    /// </summary>
     void ReturnToBase()
     {
         Vector3 toHome = homePosition - transform.position;
@@ -111,6 +115,7 @@ public class JetMover : MonoBehaviour
         {
             Debug.Log("[JetMover] 귀환 완료");
 
+            // UI 항목 복구
             if (originItemUI != null)
             {
                 originItemUI.SetAvailable(true);
@@ -120,5 +125,14 @@ public class JetMover : MonoBehaviour
             onReturnComplete?.Invoke();
             Destroy(gameObject);
         }
+    }
+
+    /// <summary>
+    /// 전투 후 생존 시 외부에서 호출되는 귀환 명령
+    /// </summary>
+    public void BeginReturn()
+    {
+        isReturning = true;
+        targetOverride = null;
     }
 }
