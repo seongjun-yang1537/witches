@@ -9,8 +9,9 @@ public class AirbaseItemUI : MonoBehaviour
     public Image jetImage;
     public Image pilotImage;
     public TextMeshProUGUI infoText;
+    public TextMeshProUGUI healingText;
     public GameObject buttonGroup;
-
+    
     public Button selectButton;    
     public Image background; // 배경 Image 연결
     public Color normalColor = Color.white;
@@ -127,6 +128,28 @@ public class AirbaseItemUI : MonoBehaviour
         if (buttonGroup != null)
             buttonGroup.SetActive(false);
     }
+    public void SetHealingState(bool isHealing, float currentHP, float maxHP)
+    {
+        if (healingText == null)
+        {
+            Debug.LogWarning("[AirbaseItemUI] HealingText is not assigned.");
+            return;
+        }
 
+        if (isHealing)
+        {
+            healingText.gameObject.SetActive(true);
+            healingText.text = $"Healing... ({Mathf.FloorToInt(currentHP)} / {Mathf.FloorToInt(maxHP)})";
+
+            if (infoText != null)
+                infoText.gameObject.SetActive(false);
+        }
+        else
+        {
+            healingText.gameObject.SetActive(false);
+            if (infoText != null)
+                infoText.gameObject.SetActive(true);
+        }
+    }
 
 }

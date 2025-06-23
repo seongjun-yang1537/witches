@@ -3,17 +3,18 @@ using UnityEngine;
 
 public class AirbasePopupUI : MonoBehaviour
 {
-    public Transform deploySpawnTarget;  // 👉 Airbase의 Transform
+    public Transform deploySpawnTarget;
     public float deployOffset = 5f;
 
     public List<AirbaseItemData> itemDataList;
     public GameObject itemPrefab;
     public Transform itemContainer;
-    public Transform deploySpawnPoint;
-
-    public Canvas uiCanvas; // ✅ JetStatus가 사용할 UI 캔버스
+    public Canvas uiCanvas;
 
     private AirbaseItemUI selectedItem;
+
+    // ✅ itemUI → jet 매핑
+    private Dictionary<AirbaseItemUI, GameObject> jetInstances = new();
 
     void Start()
     {
@@ -25,9 +26,30 @@ public class AirbasePopupUI : MonoBehaviour
             itemUI.Setup(
                 data,
                 () => OnItemSelected(itemUI),
-                () => OnDeployClicked(data),
+                () => OnDeployClicked(itemUI),
                 () => OnCancelClicked()
             );
+
+            // ✅ Jet 미리 생성
+            Vector3 offscreen = new Vector3(9999, 9999, 9999);
+            GameObject jet = Instantiate(data.unitPrefab, offscreen, Quaternion.identity);
+            jet.SetActive(false);
+            jetInstances[itemUI] = jet;
+
+            var status = jet.GetComponent<JetStatus>();
+            if (status != null)
+            {
+                status.uiCanvas = uiCanvas;
+                status.title = data.unitName;
+                status.SetOriginUI(itemUI);
+            }
+
+            var mover = jet.GetComponent<JetMover>();
+            if (mover != null)
+            {
+                mover.originItemUI = itemUI;
+                mover.homePosition = deploySpawnTarget.position;
+            }
         }
     }
 
@@ -40,62 +62,39 @@ public class AirbasePopupUI : MonoBehaviour
         selectedItem.SetSelected(true);
     }
 
-    private void OnDeployClicked(AirbaseItemData data)
+    private void OnDeployClicked(AirbaseItemUI itemUI)
     {
-        if (data.unitPrefab == null || deploySpawnTarget == null) return;
+        if (!jetInstances.TryGetValue(itemUI, out var jet) || jet == null)
+        {
+            Debug.LogWarning("[AirbasePopupUI] JetInstance is missing or destroyed.");
+            return;
+        }
 
-        // 출격 위치 계산
         Vector3 spawnPos = deploySpawnTarget.position + deploySpawnTarget.forward * deployOffset;
-        Quaternion spawnRot = deploySpawnTarget.rotation;
+        jet.transform.position = spawnPos;
+        jet.transform.rotation = deploySpawnTarget.rotation;
+        jet.SetActive(true);
 
-        GameObject unit = Instantiate(data.unitPrefab, spawnPos, spawnRot);
-
-        // ✅ JetMover 설정
-        var mover = unit.GetComponent<JetMover>();
+        var mover = jet.GetComponent<JetMover>();
         if (mover != null)
         {
-            mover.originItemUI = selectedItem;
-            mover.homePosition = deploySpawnTarget.position;
-
-            // 출격 완료 후 복귀 시 UI 다시 활성화
-            var itemToTrack = selectedItem;
-            mover.onReturnComplete = () =>
-            {
-                itemToTrack?.SetAvailable(true);
-            };
+            mover.enabled = true;
+            mover.ResetForNewDeployment();
         }
 
-        // ✅ JetStatus 설정
-        var status = unit.GetComponent<JetStatus>();
-        if (status != null && uiCanvas != null)
+        var status = jet.GetComponent<JetStatus>();
+        if (status != null)
         {
-            status.uiCanvas = uiCanvas;
-
-            // ✅ AirbaseItemData의 unitName → title 로 복사
-            status.title = data.unitName;
+            status.ResetHP();
+            status.SetOriginUI(itemUI);
         }
 
-        // ✅ 선택된 아이템 처리
-        if (selectedItem != null)
-        {
-            selectedItem.SetSelected(false);
-            selectedItem.SetDeployed(true);
-        }
-
+        itemUI.SetSelected(false);
+        itemUI.SetDeployed(true);
         selectedItem = null;
 
-        // ✅ 팝업 닫기 + 타겟 지정 페이즈로 진입
         gameObject.SetActive(false);
-
-        var targetManager = FindObjectOfType<TargetSelectionManager>();
-        if (targetManager != null)
-        {
-            targetManager.BeginTargeting(mover);
-        }
-        else
-        {
-            Debug.LogWarning("[AirbasePopupUI] TargetSelectionManager not found.");
-        }
+        FindObjectOfType<TargetSelectionManager>()?.BeginTargeting(mover);
     }
 
     private void OnCancelClicked()

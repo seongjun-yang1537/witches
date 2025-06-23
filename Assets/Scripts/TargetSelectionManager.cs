@@ -116,31 +116,22 @@ public class TargetSelectionManager : MonoBehaviour
 
         if (currentJet != null)
         {
-            // 1. 출격 취소된 전투기 제거
-            currentJet.originItemUI?.SetAvailable(true); // ✅ 다시 활성화
-            Destroy(currentJet.gameObject);
+            currentJet.originItemUI?.SetAvailable(true);
+
+            // ✅ Destroy 대신 비활성화
+            currentJet.gameObject.SetActive(false);
             currentJet = null;
         }
 
-        // 2. 시각화 제거
         lineRenderer.enabled = false;
-
-        // 3. 문구 숨기기
         messageUI.HideMessage();
 
-        // 4. AirbasePopup 다시 열기
         if (airbasePopup != null)
         {
             airbasePopup.SetActive(true);
         }
-        else
-        {
-            Debug.LogWarning("[TargetSelection] AirbasePopup not found in scene!");
-        }
 
-        // 게임 재개
-        if (PrototypeGameManager.Instance != null)
-            PrototypeGameManager.Instance.ResumeGameplay();
+        PrototypeGameManager.Instance?.ResumeGameplay();
     }
 
 
