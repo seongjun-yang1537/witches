@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 101173287}
   - component: {fileID: 101173286}
   - component: {fileID: 101173285}
+  - component: {fileID: 101173288}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -299,6 +300,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 101173283}
   m_CullTransparentMesh: 1
+--- !u!114 &101173288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101173283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526e4dd7085ad254ab209043c81cff02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popupToClose: {fileID: 193547536}
 --- !u!1 &193547536
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,6 +440,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 3545402905526904556, guid: 4e0d05f6d0fe743478011b408230bc79, type: 3}
   itemContainer: {fileID: 261060632}
   deploySpawnPoint: {fileID: 0}
+  uiCanvas: {fileID: 735781042}
 --- !u!1 &242613831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,6 +1031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aa8b21d5df1c8845850f1c6e08cea46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  airbasePopup: {fileID: 193547536}
   messageUI: {fileID: 621612853}
   targetLayer:
     serializedVersion: 2

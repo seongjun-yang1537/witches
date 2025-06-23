@@ -10,27 +10,19 @@ public class JetMover : MonoBehaviour
     public LayerMask enemyLayer;
 
     public Vector3 homePosition;
-    public ArmyStatus selfStatus;
-
-    public System.Action onReturnComplete;
-
-    public AirbaseItemUI originItemUI;  // 출격 명령을 내린 UI 아이템
-
+    public AirbaseItemUI originItemUI;
 
     private BoxCollider boxCollider;
     private bool isReturning = false;
     private readonly List<ArmyStatus> inContact = new();
+    private Transform targetOverride = null;
 
-    private Transform targetOverride;  // 추가
-
-    public void SetTarget(Transform target)
-    {
-        targetOverride = target;
-    }
-
+    public System.Action onReturnComplete;
 
     void OnEnable()
     {
+        Debug.Log("[JetMover] OnEnable 호출됨");
+
         boxCollider = GetComponent<BoxCollider>();
         boxCollider.size = Vector3.one;
         boxCollider.center = Vector3.zero;
@@ -38,7 +30,7 @@ public class JetMover : MonoBehaviour
 
     void Update()
     {
-        if (!Application.isPlaying || selfStatus == null) return;
+        if (!Application.isPlaying) return;
 
         if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
             return;
@@ -49,20 +41,26 @@ public class JetMover : MonoBehaviour
             return;
         }
 
-            // Update 내부에서 FindClosestEnemy 대신 아래로 교체
-        if (targetOverride != null)
-        {
-            float dist = Vector3.Distance(transform.position, targetOverride.position);
-            if (dist > stopDistance)
-            {
-                Vector3 dir = (targetOverride.position - transform.position).normalized;
-                transform.position += dir * speed * Time.deltaTime;
-            }
-        }
-
+        MoveTowardTarget();
         HandleCombat();
     }
 
+    public void SetTarget(Transform target)
+    {
+        targetOverride = target;
+    }
+
+    void MoveTowardTarget()
+    {
+        if (targetOverride == null) return;
+
+        float dist = Vector3.Distance(transform.position, targetOverride.position);
+        if (dist > stopDistance)
+        {
+            Vector3 dir = (targetOverride.position - transform.position).normalized;
+            transform.position += dir * speed * Time.deltaTime;
+        }
+    }
 
     void HandleCombat()
     {
@@ -72,27 +70,29 @@ public class JetMover : MonoBehaviour
         foreach (var hit in hits)
         {
             ArmyStatus other = hit.GetComponent<ArmyStatus>();
-            if (other != null && other != selfStatus)
+            if (other != null)
             {
                 currentContacts.Add(other);
 
                 if (!inContact.Contains(other))
                 {
-                    other.AddAttacker(selfStatus);
+                    // ArmyStatus에 대한 공격자 등록 생략
                     inContact.Add(other);
 
-                    // ✅ 첫 충돌 시 귀환 시작
+                    // ✅ 첫 충돌 시 귀환 모드 전환
                     isReturning = true;
+                    targetOverride = null;
                 }
             }
         }
 
+        // 접촉이 끝난 대상 제거
         for (int i = inContact.Count - 1; i >= 0; i--)
         {
             var target = inContact[i];
             if (!currentContacts.Contains(target))
             {
-                target.RemoveAttacker(selfStatus);
+                // ArmyStatus 제거 생략
                 inContact.RemoveAt(i);
             }
         }
@@ -100,8 +100,6 @@ public class JetMover : MonoBehaviour
 
     void ReturnToBase()
     {
-        if (homePosition == null) return;
-
         Vector3 toHome = homePosition - transform.position;
         float distance = toHome.magnitude;
 
@@ -111,16 +109,15 @@ public class JetMover : MonoBehaviour
         }
         else
         {
+            Debug.Log("[JetMover] 귀환 완료");
+
             if (originItemUI != null)
             {
-                Debug.Log("[JetMover] 복귀 완료 - UI 활성화 시도");
                 originItemUI.SetAvailable(true);
-            }
-            else
-            {
-                Debug.LogWarning("[JetMover] originItemUI is null!");
+                Debug.Log("[JetMover] UI 항목 복구 완료");
             }
 
+            onReturnComplete?.Invoke();
             Destroy(gameObject);
         }
     }

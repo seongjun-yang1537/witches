@@ -1,15 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class TargetSelectionManager : MonoBehaviour
 {
     public static TargetSelectionManager Instance { get; private set; }
+    public GameObject airbasePopup;
 
     private JetMover currentJet;
     private LineRenderer lineRenderer;
 
     [Header("UI Manager")]
-    public TargetMessageUI messageUI;  // "Select a Target" ¸Ş½ÃÁö Á¦¾î¿ë
+    public TargetMessageUI messageUI;  // "Select a Target" ë©”ì‹œì§€ ì œì–´ìš©
 
     [Header("Layer Mask")]
     public LayerMask targetLayer;
@@ -23,7 +24,7 @@ public class TargetSelectionManager : MonoBehaviour
         }
         Instance = this;
 
-        // ¶óÀÎ ·»´õ·¯ ±¸¼º
+        // ë¼ì¸ ë Œë”ëŸ¬ êµ¬ì„±
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         lineRenderer.startWidth = 0.05f;
@@ -35,19 +36,19 @@ public class TargetSelectionManager : MonoBehaviour
     {
         if (currentJet == null) return;
 
-        // ¸¶¿ì½º À§Ä¡ ÃßÀû + ½Ã°¢È­
+        // ë§ˆìš°ìŠ¤ ìœ„ì¹˜ ì¶”ì  + ì‹œê°í™”
         Vector3 cursorWorld = GetMouseWorldPoint();
         lineRenderer.SetPosition(0, currentJet.transform.position);
         lineRenderer.SetPosition(1, cursorWorld);
         lineRenderer.enabled = true;
 
-        // ÁÂÅ¬¸¯ = Å¸°Ù ÁöÁ¤
+        // ì¢Œí´ë¦­ = íƒ€ê²Ÿ ì§€ì •
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             TrySelectTarget(cursorWorld);
         }
 
-        // ¿ìÅ¬¸¯ ¶Ç´Â ESC = Ãâ°İ Ãë¼Ò
+        // ìš°í´ë¦­ ë˜ëŠ” ESC = ì¶œê²© ì·¨ì†Œ
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Escape))
         {
             CancelDeployment();
@@ -63,54 +64,97 @@ public class TargetSelectionManager : MonoBehaviour
         }
         else
         {
-            // ±âº» fallback
+            // ê¸°ë³¸ fallback
             return ray.origin + ray.direction * 10f;
         }
     }
 
-    void TrySelectTarget(Vector3 cursorWorld)
+    void TrySelectTarget(Vector3 _)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, targetLayer))
+
+        // Y=0 í‰ë©´ê³¼ì˜ êµì°¨ì  ê³„ì‚°
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero); // Y=0 í‰ë©´
+        if (groundPlane.Raycast(ray, out float enter))
         {
-            var targetStatus = hit.collider.GetComponent<ArmyStatus>();
-            if (targetStatus != null)
+            Vector3 mouseWorld = ray.GetPoint(enter);
+
+            Debug.Log($"[TargetSelection] mouseWorld = {mouseWorld}");
+
+            float radius = 0.5f;
+            Collider[] hits = Physics.OverlapSphere(mouseWorld, radius, targetLayer);
+
+            if (hits.Length > 0)
             {
-                // Å¸°Ù ÁöÁ¤ ¼º°ø
-                Debug.Log($"[TargetSelection] Å¸°Ù ÁöÁ¤: {targetStatus.name}");
+                var targetStatus = hits[0].GetComponent<ArmyStatus>();
+                if (targetStatus != null)
+                {
+                    currentJet.SetTarget(hits[0].transform);
+                    currentJet = null;
+                    lineRenderer.enabled = false;
+                    messageUI.HideMessage();
 
-                // JetMover¿¡°Ô Å¸°Ù Àü´Ş (ÀÓ½Ã - ÃßÈÄ JetStatus ±â¹İ ÀÌµ¿ ±¸Çö ÇÊ¿ä)
-                currentJet.SetTarget(hit.collider.transform);
-
-                currentJet = null;
-                lineRenderer.enabled = false;
-                messageUI.HideMessage();
+                    if (PrototypeGameManager.Instance != null)
+                        PrototypeGameManager.Instance.ResumeGameplay();
+                }
             }
+            else
+            {
+                Debug.LogWarning($"[TargetSelection] ì ì„ ì°¾ì§€ ëª»í•¨ - mouseWorld: {mouseWorld}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[TargetSelection] ë ˆì´ì™€ Y=0 í‰ë©´ì´ êµì°¨í•˜ì§€ ì•ŠìŒ");
         }
     }
 
+
     void CancelDeployment()
     {
-        Debug.Log("[TargetSelection] Ãâ°İ Ãë¼Ò");
+        Debug.Log("[TargetSelection] ì¶œê²© ì·¨ì†Œ");
 
         if (currentJet != null)
         {
-            currentJet.originItemUI?.SetAvailable(true);
+            // 1. ì¶œê²© ì·¨ì†Œëœ ì „íˆ¬ê¸° ì œê±°
+            currentJet.originItemUI?.SetAvailable(true); // âœ… ë‹¤ì‹œ í™œì„±í™”
             Destroy(currentJet.gameObject);
             currentJet = null;
         }
 
+        // 2. ì‹œê°í™” ì œê±°
         lineRenderer.enabled = false;
+
+        // 3. ë¬¸êµ¬ ìˆ¨ê¸°ê¸°
         messageUI.HideMessage();
 
-        var airbasePopup = GameObject.Find("AirbasePopup");
+        // 4. AirbasePopup ë‹¤ì‹œ ì—´ê¸°
         if (airbasePopup != null)
+        {
             airbasePopup.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("[TargetSelection] AirbasePopup not found in scene!");
+        }
+
+        // ê²Œì„ ì¬ê°œ
+        if (PrototypeGameManager.Instance != null)
+            PrototypeGameManager.Instance.ResumeGameplay();
     }
+
 
     public void BeginTargeting(JetMover jet)
     {
         currentJet = jet;
+
+        // ê²Œì„ ì¼ì‹œ ì •ì§€
+        if (PrototypeGameManager.Instance != null && !PrototypeGameManager.Instance.IsGameplayPaused)
+        {
+            PrototypeGameManager.Instance.PauseGameplay();
+            Debug.Log("[TargetSelection] ê²Œì„ ì¼ì‹œì •ì§€");
+        }
+
         messageUI.ShowMessage("Select a Target");
     }
 }

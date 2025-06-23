@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2732498842165835190}
   - component: {fileID: 3124883215759435620}
   - component: {fileID: -5892427498347040152}
-  - component: {fileID: 5590986925333918872}
+  - component: {fileID: 794311551471686788}
   m_Layer: 0
   m_Name: F16
   m_TagString: Untagged
@@ -127,7 +127,8 @@ MonoBehaviour:
     m_Bits: 512
   homePosition: {x: 0, y: 0, z: 0}
   selfStatus: {fileID: 0}
---- !u!114 &5590986925333918872
+  originItemUI: {fileID: 0}
+--- !u!114 &794311551471686788
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -136,14 +137,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1802220201568324948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f21fab5353273a41b9ec3eac9f6ea28, type: 3}
+  m_Script: {fileID: 11500000, guid: 70557224b7e963d4da1b8185bb6c82a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamType: 0
-  unitType: 0
-  title: Fighter
+  title: Jet
   maxHP: 100
   currentHP: 0
-  baseDamagePerSecond: 10
-  uiPrefab: {fileID: 0}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 0}
