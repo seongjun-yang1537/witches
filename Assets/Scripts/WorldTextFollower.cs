@@ -8,7 +8,9 @@ public class WorldTextFollower : MonoBehaviour
     public Camera mainCamera;                         // 사용할 카메라
     public TextMeshProUGUI uiText;                    // 연결된 텍스트
     public string label = "Unit";                     // 라벨 표시
-    public ArmyStatus status;                         // HP 정보 등
+
+    public ArmyStatus status;      // ✅ 기존 육군 유닛용
+    public JetStatus jetStatus;    // ✅ 추가: 전투기 유닛용
 
     private RectTransform uiRectTransform;
     private Canvas canvas;
@@ -35,7 +37,6 @@ public class WorldTextFollower : MonoBehaviour
 
         if (uiText == null || uiRectTransform == null || canvas == null) return;
 
-        // ✅ offset은 이미 forward 또는 -forward 방향을 포함한 월드 좌표 보정값
         Vector3 worldPosition = target.position + offset;
         Vector3 screenPosition = mainCamera.WorldToScreenPoint(worldPosition);
 
@@ -51,15 +52,82 @@ public class WorldTextFollower : MonoBehaviour
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvas.transform as RectTransform,
             screenPosition,
-            null,  // Overlay 모드일 경우 카메라 = null
+            null,
             out anchoredPos);
 
         uiRectTransform.anchoredPosition = anchoredPos;
 
-        // ✅ 텍스트 구성
-        string hpLine = (status != null) ? $"HP: {status.GetHPInt()}" : "HP: ?";
-        string buffLine = "Infantry: -";
+        // ✅ HP 및 유닛 타입 가져오기
+        string hpLine = "HP: ?";
+        CombatUnitType? selfType = null;
 
-        uiText.text = $"{label}\n{hpLine}\n{buffLine}";
+        if (status != null)
+        {
+            hpLine = $"HP: {status.GetHPInt()}";
+            selfType = status.GetCombatUnitType();
+        }
+        else if (jetStatus != null)
+        {
+            hpLine = $"HP: {jetStatus.GetHPInt()}";
+            selfType = jetStatus.GetCombatUnitType();
+        }
+
+        string armyLine = "";
+        string jetLine = "";
+
+        // ✅ selfType 이 유효할 경우에만 상성 정보 구성
+        if (selfType.HasValue)
+        {
+            foreach (CombatUnitType otherType in System.Enum.GetValues(typeof(CombatUnitType)))
+            {
+                float multiplier = UnitAffinityManager.Instance.GetMultiplier(selfType.Value, otherType);
+                string shortName = GetTypeAbbreviation(otherType);
+
+                string colorWrapped;
+                if (multiplier > 1.05f)
+                    colorWrapped = $"<color=#FF5050>↑{shortName}</color>";
+                else if (multiplier < 0.95f)
+                    colorWrapped = $"<color=#5080FF>↓{shortName}</color>";
+                else
+                    colorWrapped = $"↔{shortName}";
+
+                if (IsArmyType(otherType))
+                    armyLine += colorWrapped + " ";
+                else
+                    jetLine += colorWrapped + " ";
+            }
+        }
+
+        string affinityText = $"{armyLine.Trim()}\n{jetLine.Trim()}".Trim();
+
+        // ✅ 최종 텍스트 출력
+        if (string.IsNullOrWhiteSpace(affinityText))
+            uiText.text = $"{label}\n{hpLine}";
+        else
+            uiText.text = $"{label}\n{hpLine}\n{affinityText}";
     }
+
+
+
+    string GetTypeAbbreviation(CombatUnitType type)
+    {
+        switch (type)
+        {
+            case CombatUnitType.Infantry: return "Inf";
+            case CombatUnitType.Armor: return "Arm";
+            case CombatUnitType.AntiAir: return "AA";
+            case CombatUnitType.Fighter: return "Ftr";
+            case CombatUnitType.Attacker: return "Atk";
+            case CombatUnitType.ElectronicWarfare: return "EW";
+            default: return "???";
+        }
+    }
+
+    bool IsArmyType(CombatUnitType type)
+    {
+        return type == CombatUnitType.Infantry
+            || type == CombatUnitType.Armor
+            || type == CombatUnitType.AntiAir;
+    }
+
 }

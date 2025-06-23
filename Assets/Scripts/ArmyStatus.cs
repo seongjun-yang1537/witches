@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ArmyStatus : MonoBehaviour
 {
     public enum TeamType { Blue, Red }
-    public enum UnitType { Armor, Infantry }
+    public enum UnitType { Armor, Infantry, AntiAir }
 
     [Header("기본 정보")]
     public TeamType teamType;
@@ -26,6 +26,8 @@ public class ArmyStatus : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
+
+        SetUnitLabel(); // 병종 텍스트 자동 설정
 
         // ✅ UI 생성 및 WorldTextFollower 연결
         if (uiPrefab != null && uiCanvas != null)
@@ -71,19 +73,16 @@ public class ArmyStatus : MonoBehaviour
         {
             if (attacker == null) continue;
 
-            // 🟦 유닛 타입 배율
-            float typeMultiplier = 1f;
-            if (attacker.unitType == UnitType.Armor && unitType == UnitType.Infantry)
-                typeMultiplier = 1.3f;
-            else if (attacker.unitType == UnitType.Infantry && unitType == UnitType.Armor)
-                typeMultiplier = 0.8f;
-
-            // 🟨 데미지 랜덤 ±5%
             float randomFactor = Random.Range(0.95f, 1.05f);
+            float typeMultiplier = UnitAffinityManager.Instance.GetMultiplier(
+                attacker.GetCombatUnitType(),
+                this.GetCombatUnitType()
+            );
 
             float damage = attacker.baseDamagePerSecond * typeMultiplier * randomFactor * Time.deltaTime;
             currentHP -= damage;
         }
+
 
         if (currentHP <= 0f)
         {
@@ -107,5 +106,36 @@ public class ArmyStatus : MonoBehaviour
     public int GetHPInt()
     {
         return Mathf.FloorToInt(currentHP);
+    }
+
+    public CombatUnitType GetCombatUnitType()
+    {
+        switch (unitType)
+        {
+            case UnitType.Infantry:
+                return CombatUnitType.Infantry;
+            case UnitType.Armor:
+                return CombatUnitType.Armor;
+            case UnitType.AntiAir:
+                return CombatUnitType.AntiAir;
+            default:
+                return CombatUnitType.Infantry;
+        }
+    }
+
+    void SetUnitLabel()
+    {
+        TextMeshPro label = GetComponentInChildren<TextMeshPro>();
+        if (label == null) return;
+
+        string code = unitType switch
+        {
+            UnitType.Infantry => "Inf",
+            UnitType.Armor => "Arm",
+            UnitType.AntiAir => "AA",
+            _ => "???"
+        };
+
+        label.text = code;        
     }
 }

@@ -5,6 +5,30 @@ public class JetStatus : MonoBehaviour
 {
     public enum TeamType { Blue, Red }
 
+    public enum JetType
+    {
+        Fighter,
+        Attacker,
+        ElectronicWarfare
+    }
+
+    public JetType jetType = JetType.Fighter;
+
+    public CombatUnitType GetCombatUnitType()
+    {
+        switch (jetType)
+        {
+            case JetType.Fighter:
+                return CombatUnitType.Fighter;
+            case JetType.Attacker:
+                return CombatUnitType.Attacker;
+            case JetType.ElectronicWarfare:
+                return CombatUnitType.ElectronicWarfare;
+            default:
+                return CombatUnitType.Fighter;
+        }
+    }
+
     [Header("기본 정보")]
     public TeamType teamType = TeamType.Blue;
     public string title = "Jet";
@@ -23,6 +47,8 @@ public class JetStatus : MonoBehaviour
     {
         currentHP = maxHP;
 
+        SetUnitLabel(); // 병종 텍스트 자동 설정
+
         // ✅ UI 생성 및 설정
         if (uiPrefab != null && uiCanvas != null)
         {
@@ -35,6 +61,7 @@ public class JetStatus : MonoBehaviour
             {
                 follower.target = transform;
                 follower.status = null;            // JetStatus에는 ArmyStatus가 아님
+                follower.jetStatus = this;
                 follower.uiText = tmpText;
                 follower.label = title;
 
@@ -83,5 +110,27 @@ public class JetStatus : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    void SetUnitLabel()
+    {
+        TextMeshPro label = GetComponentInChildren<TextMeshPro>();
+        if (label == null) return;
+
+        string code = jetType switch
+        {
+            JetType.Fighter => "Ftr",
+            JetType.Attacker => "Atk",
+            JetType.ElectronicWarfare => "EW",
+            _ => "???"
+        };
+
+        label.text = code;
+
+        label.color = teamType switch
+        {
+            TeamType.Blue => Color.blue,
+            TeamType.Red => Color.red,
+            _ => Color.white
+        };
     }
 }

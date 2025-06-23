@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.5, y: 0.5}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3792015932573572121
 CanvasRenderer:
@@ -153,4 +153,3 @@ MonoBehaviour:
   uiText: {fileID: 5146120673398458165}
   label: Unit
   status: {fileID: 0}
-  offsetDirectionSign: 1
