@@ -83,6 +83,10 @@ public class AirbasePopupUI : MonoBehaviour
         }
 
         selectedItem = null;
+
+        TargetSelectionManager.Instance.BeginTargeting(mover);
+        gameObject.SetActive(false);  // 팝업 닫기
+
     }
 
 

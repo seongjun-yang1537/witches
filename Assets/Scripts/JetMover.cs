@@ -21,6 +21,14 @@ public class JetMover : MonoBehaviour
     private bool isReturning = false;
     private readonly List<ArmyStatus> inContact = new();
 
+    private Transform targetOverride;  // 추가
+
+    public void SetTarget(Transform target)
+    {
+        targetOverride = target;
+    }
+
+
     void OnEnable()
     {
         boxCollider = GetComponent<BoxCollider>();
@@ -41,14 +49,13 @@ public class JetMover : MonoBehaviour
             return;
         }
 
-        ArmyStatus target = FindClosestEnemy();
-
-        if (target != null)
+            // Update 내부에서 FindClosestEnemy 대신 아래로 교체
+        if (targetOverride != null)
         {
-            float dist = Vector3.Distance(transform.position, target.transform.position);
+            float dist = Vector3.Distance(transform.position, targetOverride.position);
             if (dist > stopDistance)
             {
-                Vector3 dir = (target.transform.position - transform.position).normalized;
+                Vector3 dir = (targetOverride.position - transform.position).normalized;
                 transform.position += dir * speed * Time.deltaTime;
             }
         }
@@ -56,28 +63,6 @@ public class JetMover : MonoBehaviour
         HandleCombat();
     }
 
-    ArmyStatus FindClosestEnemy()
-    {
-        Collider[] hits = Physics.OverlapSphere(transform.position, 20f, enemyLayer);
-        ArmyStatus closest = null;
-        float minDist = float.MaxValue;
-
-        foreach (var hit in hits)
-        {
-            ArmyStatus other = hit.GetComponent<ArmyStatus>();
-            if (other != null && other != selfStatus)
-            {
-                float dist = Vector3.Distance(transform.position, other.transform.position);
-                if (dist < minDist)
-                {
-                    minDist = dist;
-                    closest = other;
-                }
-            }
-        }
-
-        return closest;
-    }
 
     void HandleCombat()
     {
