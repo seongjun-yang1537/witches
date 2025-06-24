@@ -51,8 +51,8 @@ public class CombatResultHandler : MonoBehaviour
 
         List<string> logLines = new()
         {
-            $"{jetLabel} dealt {damageToTarget:F0} damage to {targetLabel} (HP: {Mathf.Max(0, Mathf.FloorToInt(target.currentHP))})",
-            $"{targetLabel} dealt {damageToJet:F0} damage to {jetLabel} (HP: {Mathf.Max(0, Mathf.FloorToInt(jet.currentHP))})"
+            $"{jetLabel} dealt {damageToTarget:F0} damage to {targetLabel} (HP: {Mathf.Max(0f, target.currentHP):F1})",
+            $"{targetLabel} dealt {damageToJet:F0} damage to {jetLabel} (HP: {Mathf.Max(0f, jet.currentHP):F1})"
         };
 
         if (jetDestroyed) logLines.Add($"{jetLabel} has been destroyed");
@@ -104,8 +104,8 @@ public class CombatResultHandler : MonoBehaviour
 
         List<string> log = new()
         {
-            $"{labelA} dealt {damageAtoB:F0} to {labelB} (HP: {Mathf.Max(0, Mathf.FloorToInt(jetB.currentHP))})",
-            $"{labelB} dealt {damageBtoA:F0} to {labelA} (HP: {Mathf.Max(0, Mathf.FloorToInt(jetA.currentHP))})"
+            $"{labelA} dealt {damageAtoB:F0} to {labelB} (HP: {Mathf.Max(0f, jetB.currentHP) :F1})",
+            $"{labelB} dealt {damageBtoA:F0} to {labelA} (HP: {Mathf.Max(0f, jetA.currentHP) :F1})"
         };
         if (aDestroyed) log.Add($"{labelA} has been destroyed");
         if (bDestroyed) log.Add($"{labelB} has been destroyed");

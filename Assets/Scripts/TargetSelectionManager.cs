@@ -72,56 +72,62 @@ public class TargetSelectionManager : MonoBehaviour
     void TrySelectTarget(Vector3 _)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
-        // Y=0 평면과의 교차점 계산
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero); // Y=0 평면
         if (groundPlane.Raycast(ray, out float enter))
         {
             Vector3 mouseWorld = ray.GetPoint(enter);
-            Debug.Log($"[TargetSelection] mouseWorld = {mouseWorld}");
-
             float radius = 1.0f;
 
-            // ✅ "Red" 레이어만 감지하도록 설정된 LayerMask 사용
             Collider[] hits = Physics.OverlapSphere(mouseWorld, radius, targetLayer);
 
-            ArmyStatus selected = null;
+            Transform selectedTarget = null;
             float closestDistance = float.MaxValue;
 
             foreach (var hit in hits)
             {
-                ArmyStatus status = hit.GetComponent<ArmyStatus>();
-                if (status != null && status.teamType == ArmyStatus.TeamType.Red)
+                // ✅ JetStatus 우선 체크
+                JetStatus jet = hit.GetComponent<JetStatus>();
+                if (jet != null && jet.teamType == JetStatus.TeamType.Red && !jet.isHealing)
                 {
-                    float dist = Vector3.Distance(mouseWorld, hit.transform.position);
+                    float dist = Vector3.Distance(mouseWorld, jet.transform.position);
                     if (dist < closestDistance)
                     {
-                        selected = status;
                         closestDistance = dist;
+                        selectedTarget = jet.transform;
+                    }
+                    continue; // 우선적으로 처리
+                }
+
+                // ✅ ArmyStatus 체크
+                ArmyStatus army = hit.GetComponent<ArmyStatus>();
+                if (army != null && army.teamType == ArmyStatus.TeamType.Red)
+                {
+                    float dist = Vector3.Distance(mouseWorld, army.transform.position);
+                    if (dist < closestDistance)
+                    {
+                        closestDistance = dist;
+                        selectedTarget = army.transform;
                     }
                 }
             }
 
-            if (selected != null)
+            if (selectedTarget != null)
             {
-                currentJet.SetTarget(selected.transform);
+                currentJet.SetTarget(selectedTarget);
                 currentJet = null;
                 lineRenderer.enabled = false;
                 messageUI.HideMessage();
 
-                if (PrototypeGameManager.Instance != null)
-                    PrototypeGameManager.Instance.ResumeGameplay();
+                PrototypeGameManager.Instance?.ResumeGameplay();
             }
             else
             {
-                Debug.LogWarning($"[TargetSelection] 적을 찾지 못함 - mouseWorld: {mouseWorld}");
+                Debug.LogWarning("[TargetSelection] 적 타겟을 찾지 못함");
             }
         }
-        else
-        {
-            Debug.LogWarning("[TargetSelection] 레이와 Y=0 평면이 교차하지 않음");
-        }
     }
+
 
 
 

@@ -63,12 +63,12 @@ public class WorldTextFollower : MonoBehaviour
 
         if (status != null)
         {
-            hpLine = $"HP: {status.GetHPInt()}";
+            hpLine = $"HP: {status.GetHPInt():F1}";
             selfType = status.GetCombatUnitType();
         }
         else if (jetStatus != null)
         {
-            hpLine = $"HP: {jetStatus.GetHPInt()}";
+            hpLine = $"HP: {jetStatus.GetHPInt():F1}";
             selfType = jetStatus.GetCombatUnitType();
         }
 

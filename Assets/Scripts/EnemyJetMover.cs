@@ -1,17 +1,17 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(BoxCollider))]
 public class EnemyJetMover : MonoBehaviour
 {
-    public float patrolRadius = 3f;         // ¿øÇü ¼±È¸ ¹İ°æ
-    public float patrolSpeed = 1f;          // ¼±È¸ ¼Óµµ
-    public float chaseSpeed = 4f;           // Ãß°İ ¼Óµµ
-    public float detectionRange = 15f;      // Å½Áö ¹İ°æ
-    public float contactRadius = 1f;        // Ãæµ¹ ÆÇÁ¤ ¹üÀ§
-    public float checkInterval = 1.0f;      // Å½»ö ÁÖ±â
+    public float patrolRadius = 3f;         // ì›í˜• ì„ íšŒ ë°˜ê²½
+    public float patrolSpeed = 1f;          // ì„ íšŒ ì†ë„
+    public float chaseSpeed = 4f;           // ì¶”ê²© ì†ë„
+    public float detectionRange = 15f;      // íƒì§€ ë°˜ê²½
+    public float contactRadius = 1f;        // ì¶©ëŒ íŒì • ë²”ìœ„
+    public float checkInterval = 1.0f;      // íƒìƒ‰ ì£¼ê¸°
 
-    public LayerMask targetLayer;           // Blue Jet Å½Áö¿ë
+    public LayerMask targetLayer;           // Blue Jet íƒì§€ìš©
 
     private Vector3 centerPosition;
     private float patrolAngle = 0f;
@@ -39,7 +39,8 @@ public class EnemyJetMover : MonoBehaviour
         if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
             return;
 
-        if (targetJet == null)
+        // âœ… íƒ€ê²Ÿì´ ìœ íš¨í•˜ì§€ ì•Šìœ¼ë©´ íƒìƒ‰ ë£¨í‹´ìœ¼ë¡œ ì „í™˜
+        if (targetJet == null || !targetJet.gameObject.activeInHierarchy || targetJet.isHealing)
         {
             Patrol();
             checkTimer -= Time.deltaTime;
@@ -48,12 +49,13 @@ public class EnemyJetMover : MonoBehaviour
                 checkTimer = checkInterval;
                 FindTargetJet();
             }
+
+            return; // âœ… ì´ ì¤„ì´ ë°˜ë“œì‹œ í•„ìš”í•©ë‹ˆë‹¤!
         }
-        else
-        {
-            Chase();
-            TryCombat();
-        }
+
+        // âœ… ìœ íš¨í•œ íƒ€ê²Ÿì´ë©´ ì¶”ê²© ë° ì „íˆ¬
+        Chase();
+        TryCombat();
     }
 
     void Patrol()
@@ -71,7 +73,7 @@ public class EnemyJetMover : MonoBehaviour
     void FindTargetJet()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, detectionRange, targetLayer);
-        Debug.Log($"[EnemyJet] Å½»öµÊ ´ë»ó ¼ö: {hits.Length}");
+        Debug.Log($"[EnemyJet] íƒìƒ‰ë¨ ëŒ€ìƒ ìˆ˜: {hits.Length}");
 
         float closestDist = float.MaxValue;
         JetStatus closestJet = null;
@@ -82,7 +84,7 @@ public class EnemyJetMover : MonoBehaviour
             if (jet != null && jet.teamType == JetStatus.TeamType.Blue && !jet.isHealing)
             {
                 float dist = Vector3.Distance(transform.position, jet.transform.position);
-                Debug.Log($"[EnemyJet] °¨ÁöµÈ {jet.title}, °Å¸®: {dist}");
+                Debug.Log($"[EnemyJet] ê°ì§€ëœ {jet.title}, ê±°ë¦¬: {dist}");
 
                 if (dist < closestDist)
                 {
@@ -94,7 +96,7 @@ public class EnemyJetMover : MonoBehaviour
 
         if (closestJet != null)
         {
-            Debug.Log($"[EnemyJet] Å¸°Ù ÁöÁ¤: {closestJet.title}");
+            Debug.Log($"[EnemyJet] íƒ€ê²Ÿ ì§€ì •: {closestJet.title}");
             targetJet = closestJet;
         }
     }
@@ -126,7 +128,7 @@ public class EnemyJetMover : MonoBehaviour
         {
             CombatResultHandler.Instance?.HandleCombat(selfStatus, targetJet);
 
-            // Ãæµ¹ ÈÄ ´Ù½Ã ´ë±â »óÅÂ·Î º¹±Í
+            // ì¶©ëŒ í›„ ë‹¤ì‹œ ëŒ€ê¸° ìƒíƒœë¡œ ë³µê·€
             targetJet = null;
         }
     }
