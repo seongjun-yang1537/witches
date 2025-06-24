@@ -24,13 +24,13 @@ MonoBehaviour:
     multiplier: 1
   - attacker: 0
     defender: 3
-    multiplier: 0.5
+    multiplier: 0.25
   - attacker: 0
     defender: 4
     multiplier: 0.1
   - attacker: 0
     defender: 5
-    multiplier: 0.5
+    multiplier: 0.25
   - attacker: 1
     defender: 0
     multiplier: 4
@@ -42,13 +42,13 @@ MonoBehaviour:
     multiplier: 1.5
   - attacker: 1
     defender: 3
-    multiplier: 0.5
+    multiplier: 0.25
   - attacker: 1
     defender: 4
     multiplier: 0.25
   - attacker: 1
     defender: 5
-    multiplier: 0.5
+    multiplier: 0.25
   - attacker: 2
     defender: 0
     multiplier: 1.5
@@ -60,55 +60,55 @@ MonoBehaviour:
     multiplier: 1
   - attacker: 2
     defender: 3
-    multiplier: 2
+    multiplier: 1
   - attacker: 2
     defender: 4
     multiplier: 1
   - attacker: 2
     defender: 5
-    multiplier: 0.5
+    multiplier: 0.1
   - attacker: 3
-    defender: 0
-    multiplier: 1
-  - attacker: 3
-    defender: 1
-    multiplier: 0.5
-  - attacker: 3
-    defender: 2
-    multiplier: 0.5
-  - attacker: 3
-    defender: 3
-    multiplier: 1
-  - attacker: 3
-    defender: 4
-    multiplier: 2
-  - attacker: 3
-    defender: 5
-    multiplier: 1
-  - attacker: 4
     defender: 0
     multiplier: 4
+  - attacker: 3
+    defender: 1
+    multiplier: 3
+  - attacker: 3
+    defender: 2
+    multiplier: 1
+  - attacker: 3
+    defender: 3
+    multiplier: 1
+  - attacker: 3
+    defender: 4
+    multiplier: 1.25
+  - attacker: 3
+    defender: 5
+    multiplier: 1
+  - attacker: 4
+    defender: 0
+    multiplier: 8
   - attacker: 4
     defender: 1
-    multiplier: 2
+    multiplier: 4
   - attacker: 4
     defender: 2
-    multiplier: 2
+    multiplier: 6
   - attacker: 4
     defender: 3
-    multiplier: 0.5
+    multiplier: 0.75
   - attacker: 4
     defender: 4
     multiplier: 1
   - attacker: 4
     defender: 5
-    multiplier: 0.5
+    multiplier: 0.75
   - attacker: 5
     defender: 0
-    multiplier: 0.5
+    multiplier: 1
   - attacker: 5
     defender: 1
-    multiplier: 0.25
+    multiplier: 1
   - attacker: 5
     defender: 2
     multiplier: 4

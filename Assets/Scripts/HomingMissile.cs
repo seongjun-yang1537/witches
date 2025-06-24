@@ -19,6 +19,9 @@ public class HomingMissile : MonoBehaviour
 
     void Update()
     {
+        if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
+            return;
+
         if (target == null || !target.gameObject.activeInHierarchy)
         {
             Destroy(gameObject);
@@ -73,6 +76,10 @@ public class HomingMissile : MonoBehaviour
     void TryApplyDamage(JetStatus jet)
     {
         float hitChance = 0.5f;
+        // ✅ EW 기체는 명중률 하향
+        if (jet.jetType == JetStatus.JetType.ElectronicWarfare)
+            hitChance = 0.1f;
+
         bool isHit = Random.value <= hitChance;
 
         if (isHit)

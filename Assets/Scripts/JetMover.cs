@@ -81,25 +81,30 @@ public class JetMover : MonoBehaviour
 
     void HandleCombat()
     {
+        if (targetOverride == null) return; // 타겟 없으면 충돌 무시
+
         Collider[] hits = Physics.OverlapSphere(transform.position, contactRadius, enemyLayer);
 
         foreach (var hit in hits)
         {
             ArmyStatus enemy = hit.GetComponent<ArmyStatus>();
-            if (enemy != null)
-            {
-                var myStatus = GetComponent<JetStatus>();
-                if (myStatus != null)
-                {
-                    CombatResultHandler.Instance.HandleCombat(myStatus, enemy);
-                }
+            if (enemy == null) continue;
 
-                isReturning = true;
-                targetOverride = null;
-                break;
+            // ✅ 지정한 타겟과만 전투 수행
+            if (enemy.transform != targetOverride) continue;
+
+            var myStatus = GetComponent<JetStatus>();
+            if (myStatus != null)
+            {
+                CombatResultHandler.Instance.HandleCombat(myStatus, enemy);
             }
+
+            isReturning = true;
+            targetOverride = null;
+            break;
         }
     }
+
 
     void ReturnToBase()
     {
