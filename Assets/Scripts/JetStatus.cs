@@ -36,6 +36,8 @@ public class JetStatus : MonoBehaviour
 
     void Start()
     {
+        GameStateManager.Instance?.RegisterJet(this);
+
         currentHP = maxHP;
         SetUnitLabel();
 
@@ -136,5 +138,10 @@ public class JetStatus : MonoBehaviour
         isHealing = true;
         originItemUI?.SetAvailable(false);
         originItemUI?.SetHealingState(true, currentHP, maxHP);
+    }
+
+    void OnDestroy()
+    {
+        GameStateManager.Instance?.UnregisterJet(this);
     }
 }

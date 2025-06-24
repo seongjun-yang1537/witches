@@ -25,6 +25,7 @@ public class ArmyStatus : MonoBehaviour
 
     void Start()
     {
+        GameStateManager.Instance?.RegisterArmy(this);
         currentHP = maxHP;
 
         SetUnitLabel(); // 병종 텍스트 자동 설정
@@ -183,5 +184,10 @@ public class ArmyStatus : MonoBehaviour
         };
 
         label.text = code;        
+    }
+
+    void OnDestroy()
+    {
+        GameStateManager.Instance?.UnregisterArmy(this);
     }
 }
