@@ -6,6 +6,9 @@ public class PrototypeGameManager : MonoBehaviour
     public float armyCombatTickInterval = 0.5f;
     public float armyBaseDamagePerSecond = 10f;
 
+    public float baseDamageJet = 50f;
+    public float baseDamageGround = 40f;
+
     [Header("Jet Settings")]
     public float jetRegenPerSecond = 1f;
 

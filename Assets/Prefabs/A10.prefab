@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3124883215759435620}
   - component: {fileID: -5892427498347040152}
   - component: {fileID: 794311551471686788}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: A10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6506563963269846549}
   - component: {fileID: 6408028287675198789}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: JetImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 4587953451402375051}
   - component: {fileID: 1325658234762778985}
   - component: {fileID: 8226103268342801775}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: UnitLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
