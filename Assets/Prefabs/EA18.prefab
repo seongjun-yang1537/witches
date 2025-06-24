@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cb17085e1c0ffc4a9ff609ac22a4d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 1.5
   contactRadius: 0.1
   stopDistance: 0.1
   enemyLayer:

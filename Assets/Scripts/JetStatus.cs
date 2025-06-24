@@ -143,5 +143,11 @@ public class JetStatus : MonoBehaviour
     void OnDestroy()
     {
         GameStateManager.Instance?.UnregisterJet(this);
+
+        if (originItemUI != null)
+        {
+            Destroy(originItemUI.gameObject);
+            originItemUI = null;
+        }
     }
 }
