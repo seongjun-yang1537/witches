@@ -38,6 +38,13 @@ public class JetMover : MonoBehaviour
             return;
         }
 
+        // ✅ 대상이 사라진 경우 귀환 처리
+        if (targetOverride == null)
+        {
+            BeginReturn(); // 귀환 시작
+            return;
+        }
+
         MoveTowardTarget();
         HandleCombat();
     }

@@ -100,11 +100,27 @@ public class WorldTextFollower : MonoBehaviour
 
         string affinityText = $"{armyLine.Trim()}\n{jetLine.Trim()}".Trim();
 
+        // ✅ 팀 컬러에 따른 라벨 색상 지정
+        string coloredLabel = label;
+        Color teamColor = Color.white;
+
+        if (status != null)
+        {
+            teamColor = status.teamType == ArmyStatus.TeamType.Red ? Color.red : Color.blue;
+        }
+        else if (jetStatus != null)
+        {
+            teamColor = jetStatus.teamType == JetStatus.TeamType.Red ? Color.red : Color.blue;
+        }
+
+        string hexColor = ColorUtility.ToHtmlStringRGB(teamColor);
+        coloredLabel = $"<color=#{hexColor}>{label}</color>";
+
         // ✅ 최종 텍스트 출력
         if (string.IsNullOrWhiteSpace(affinityText))
-            uiText.text = $"{label}\n{hpLine}";
+            uiText.text = $"{coloredLabel}\n{hpLine}";
         else
-            uiText.text = $"{label}\n{hpLine}\n{affinityText}";
+            uiText.text = $"{coloredLabel}\n{hpLine}\n{affinityText}";
     }
 
 

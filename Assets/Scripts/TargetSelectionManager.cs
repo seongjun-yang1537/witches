@@ -145,8 +145,6 @@ public class TargetSelectionManager : MonoBehaviour
         {
             airbasePopup.SetActive(true);
         }
-
-        PrototypeGameManager.Instance?.ResumeGameplay();
     }
 
 
