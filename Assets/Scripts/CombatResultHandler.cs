@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CombatResultHandler : MonoBehaviour
@@ -133,4 +134,52 @@ public class CombatResultHandler : MonoBehaviour
              : team == "red" ? $"<color=#FF5050>{name}</color>"
              : name;
     }
+
+    public void HandleAntiAirHit(JetStatus target)
+    {
+        if (target == null) return;
+
+        PrototypeGameManager.Instance?.PauseGameplay();
+
+        float damage = 30f;
+
+        resultPopup.gameObject.SetActive(true);
+
+        resultPopup.ShowResult(
+            new List<string>
+            {
+            "⚠ Incoming missile detected!",
+            "Evasion failed.",
+            $"<color=red>Received {damage} damage.</color>"
+            },
+            onClose: () =>
+            {
+                target.ApplyDamage(damage);
+                PrototypeGameManager.Instance?.ResumeGameplay();
+            }
+        );
+    }
+
+    public void HandleAntiAirMiss(JetStatus target)
+    {
+        if (target == null) return;
+
+        PrototypeGameManager.Instance?.PauseGameplay();
+                
+        resultPopup.gameObject.SetActive(true);
+
+        resultPopup.ShowResult(
+            new List<string>
+            {
+            "⚠ Incoming missile detected!",
+            "Evasion successful.",
+            "<color=green>No damage taken.</color>"
+            },
+            onClose: () =>
+            {
+                PrototypeGameManager.Instance?.ResumeGameplay();
+            }
+        );
+    }
+
 }

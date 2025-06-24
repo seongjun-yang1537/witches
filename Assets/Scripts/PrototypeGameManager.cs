@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PrototypeGameManager : MonoBehaviour
 {
@@ -11,6 +11,9 @@ public class PrototypeGameManager : MonoBehaviour
 
     [Header("Jet Settings")]
     public float jetRegenPerSecond = 1f;
+
+    [Header("Anti-Air Settings")]
+    public float antiAirReloadTime = 5f;  // âœ… ì¶”ê°€: ë¯¸ì‚¬ì¼ ì¬ì¥ì „ ì‹œê°„ (ê¸°ë³¸ 5ì´ˆ)
 
     public static PrototypeGameManager Instance { get; private set; }
 
@@ -27,13 +30,13 @@ public class PrototypeGameManager : MonoBehaviour
     public void PauseGameplay()
     {
         IsGameplayPaused = true;
-        Debug.Log("[Prototype] °ÔÀÓ ·ÎÁ÷ Á¤ÁöµÊ");
+        Debug.Log("[Prototype] ê²Œì„ ë¡œì§ ì •ì§€ë¨");
     }
 
     public void ResumeGameplay()
     {
         IsGameplayPaused = false;
-        Debug.Log("[Prototype] °ÔÀÓ ·ÎÁ÷ Àç°³µÊ");
+        Debug.Log("[Prototype] ê²Œì„ ë¡œì§ ì¬ê°œë¨");
     }
 
     public void TogglePause()
