@@ -556,11 +556,10 @@ MonoBehaviour:
   deployOffset: 0.5
   itemDataList:
   - {fileID: 11400000, guid: e3f59cdaade616644ac0349aa66567b3, type: 2}
-  - {fileID: 11400000, guid: e3f59cdaade616644ac0349aa66567b3, type: 2}
-  - {fileID: 11400000, guid: e3f59cdaade616644ac0349aa66567b3, type: 2}
+  - {fileID: 11400000, guid: 79d966a99c49d5a4f85f7f997b20f966, type: 2}
+  - {fileID: 11400000, guid: b4ebe427780c1814680727a81395caa7, type: 2}
   itemPrefab: {fileID: 3545402905526904556, guid: 4e0d05f6d0fe743478011b408230bc79, type: 3}
   itemContainer: {fileID: 261060632}
-  deploySpawnPoint: {fileID: 0}
   uiCanvas: {fileID: 735781042}
 --- !u!1 &223878694
 GameObject:

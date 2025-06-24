@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: A10Data
   m_EditorClassIdentifier: 
   unitName: A-10C
+  jetType: 1
   jetSprite: {fileID: 21300000, guid: 14a4c4efc7f7efe419d3e02bbe1e3fc1, type: 3}
   pilotSprite: {fileID: 21300000, guid: 53ca24d9cb3f0204c8e5e5f2090c2591, type: 3}
   description: A-10C Tank Killer is stronger than Armor type unit.

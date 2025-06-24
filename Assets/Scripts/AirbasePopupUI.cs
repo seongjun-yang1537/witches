@@ -39,6 +39,7 @@ public class AirbasePopupUI : MonoBehaviour
             var status = jet.GetComponent<JetStatus>();
             if (status != null)
             {
+                status.jetType = data.jetType;
                 status.uiCanvas = uiCanvas;
                 status.title = data.unitName;
                 status.SetOriginUI(itemUI);

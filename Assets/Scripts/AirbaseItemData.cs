@@ -1,21 +1,24 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [CreateAssetMenu(fileName = "AirbaseItemData", menuName = "ScriptableObjects/AirbaseItemData", order = 0)]
 public class AirbaseItemData : ScriptableObject
 {
-    [Header("±âÃ¼ ÀÌ¸§")]
+    [Header("ê¸°ì²´ ì´ë¦„")]
     public string unitName;
 
-    [Header("ÀüÅõ±â ÀÌ¹ÌÁö (UI¿ë)")]
+    [Header("íƒ€ì…")]
+    public JetStatus.JetType jetType;
+
+    [Header("ì „íˆ¬ê¸° ì´ë¯¸ì§€ (UIìš©)")]
     public Sprite jetSprite;
 
-    [Header("ÆÄÀÏ·µ ÀÌ¹ÌÁö (UI¿ë)")]
+    [Header("íŒŒì¼ëŸ¿ ì´ë¯¸ì§€ (UIìš©)")]
     public Sprite pilotSprite;
 
-    [Header("¼³¸í ÅØ½ºÆ®")]
+    [Header("ì„¤ëª… í…ìŠ¤íŠ¸")]
     [TextArea]
     public string description;
 
-    [Header("Ãâ°İ ½Ã »ı¼ºÇÒ ÀüÅõ±â ÇÁ¸®ÆÕ")]
+    [Header("ì¶œê²© ì‹œ ìƒì„±í•  ì „íˆ¬ê¸° í”„ë¦¬íŒ¹")]
     public GameObject unitPrefab;
 }

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PrototypeGameManager : MonoBehaviour
 {
+    [Header("Combat Settings")]
+    public float armyCombatTickInterval = 0.5f;
     public static PrototypeGameManager Instance { get; private set; }
 
     public bool IsGameplayPaused { get; private set; }

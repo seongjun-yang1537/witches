@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: EA18Data
   m_EditorClassIdentifier: 
   unitName: EA-18G
+  jetType: 2
   jetSprite: {fileID: 21300000, guid: 61b12a2b79b671743bdde4110bc8e815, type: 3}
   pilotSprite: {fileID: 21300000, guid: d7694ca51e411e54a8f3465d5085e07a, type: 3}
   description: EA-18G is an electronic warfare attacker in US Navy.
