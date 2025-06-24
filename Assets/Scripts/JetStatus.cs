@@ -12,7 +12,6 @@ public class JetStatus : MonoBehaviour
     public float maxHP = 100f;
     public float currentHP;
 
-    public float regenPerSecond = 1f;
     public bool isHealing = false;
 
     public GameObject uiPrefab;
@@ -73,7 +72,8 @@ public class JetStatus : MonoBehaviour
 
         if (!isHealing) return;
 
-        currentHP += regenPerSecond * Time.deltaTime;
+        float regen = PrototypeGameManager.Instance?.jetRegenPerSecond ?? 1f;
+        currentHP += regen * Time.deltaTime;
         currentHP = Mathf.Min(currentHP, maxHP);
 
         originItemUI?.SetHealingState(true, currentHP, maxHP);

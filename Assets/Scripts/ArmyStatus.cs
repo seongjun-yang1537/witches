@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 
 public class ArmyStatus : MonoBehaviour
 {
@@ -13,8 +14,7 @@ public class ArmyStatus : MonoBehaviour
     public string title = "Unit";
     public float maxHP = 100f;
     public float currentHP;
-
-    public float baseDamagePerSecond = 10f;
+    
 
     [Header("UI 설정")]
     public GameObject uiPrefab;
@@ -59,9 +59,55 @@ public class ArmyStatus : MonoBehaviour
         }
 
         Debug.Log($"[{title}] 생성됨 - TeamType: {teamType}");
+
+        StartCoroutine(DamageTickLoop());
     }
 
-    void Update()
+    private IEnumerator DamageTickLoop()
+    {
+        while (true)
+        {
+            if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
+            {
+                yield return null;
+                continue;
+            }
+
+            if (attackers.Count > 0)
+            {
+                foreach (var attacker in attackers)
+                {
+                    if (attacker == null) continue;
+
+                    float randomFactor = Random.Range(0.95f, 1.05f);
+                    float typeMultiplier = UnitAffinityManager.Instance.GetMultiplier(
+                        attacker.GetCombatUnitType(),
+                        this.GetCombatUnitType()
+                    );
+
+                    float tickInterval = PrototypeGameManager.Instance.armyCombatTickInterval;
+
+                    float baseDPS = PrototypeGameManager.Instance?.armyBaseDamagePerSecond ?? 10f;
+                    float damage = baseDPS * typeMultiplier * randomFactor * tickInterval;
+
+                    currentHP -= damage;
+                }
+
+                if (currentHP <= 0f)
+                {
+                    if (createdUI != null) Destroy(createdUI);
+                    Destroy(gameObject);
+                    yield break;
+                }
+            }
+
+            float interval = PrototypeGameManager.Instance?.armyCombatTickInterval ?? 0.5f;
+            yield return new WaitForSeconds(interval);
+        }
+    }
+
+
+    /*void Update()
     {
         if (attackers.Count == 0) return;
 
@@ -89,7 +135,7 @@ public class ArmyStatus : MonoBehaviour
             if (createdUI != null) Destroy(createdUI);
             Destroy(gameObject);
         }
-    }
+    }*/
 
     public void AddAttacker(ArmyStatus attacker)
     {

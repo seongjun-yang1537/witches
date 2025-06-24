@@ -144,9 +144,8 @@ MonoBehaviour:
   jetType: 0
   teamType: 0
   title: Jet
-  maxHP: 100
+  maxHP: 75
   currentHP: 0
-  regenPerSecond: 1
   isHealing: 0
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 0}

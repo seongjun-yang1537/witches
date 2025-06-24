@@ -78,25 +78,39 @@ public class TargetSelectionManager : MonoBehaviour
         if (groundPlane.Raycast(ray, out float enter))
         {
             Vector3 mouseWorld = ray.GetPoint(enter);
-
             Debug.Log($"[TargetSelection] mouseWorld = {mouseWorld}");
 
             float radius = 1.0f;
+
+            // ✅ "Red" 레이어만 감지하도록 설정된 LayerMask 사용
             Collider[] hits = Physics.OverlapSphere(mouseWorld, radius, targetLayer);
 
-            if (hits.Length > 0)
-            {
-                var targetStatus = hits[0].GetComponent<ArmyStatus>();
-                if (targetStatus != null)
-                {
-                    currentJet.SetTarget(hits[0].transform);
-                    currentJet = null;
-                    lineRenderer.enabled = false;
-                    messageUI.HideMessage();
+            ArmyStatus selected = null;
+            float closestDistance = float.MaxValue;
 
-                    if (PrototypeGameManager.Instance != null)
-                        PrototypeGameManager.Instance.ResumeGameplay();
+            foreach (var hit in hits)
+            {
+                ArmyStatus status = hit.GetComponent<ArmyStatus>();
+                if (status != null && status.teamType == ArmyStatus.TeamType.Red)
+                {
+                    float dist = Vector3.Distance(mouseWorld, hit.transform.position);
+                    if (dist < closestDistance)
+                    {
+                        selected = status;
+                        closestDistance = dist;
+                    }
                 }
+            }
+
+            if (selected != null)
+            {
+                currentJet.SetTarget(selected.transform);
+                currentJet = null;
+                lineRenderer.enabled = false;
+                messageUI.HideMessage();
+
+                if (PrototypeGameManager.Instance != null)
+                    PrototypeGameManager.Instance.ResumeGameplay();
             }
             else
             {
@@ -108,6 +122,7 @@ public class TargetSelectionManager : MonoBehaviour
             Debug.LogWarning("[TargetSelection] 레이와 Y=0 평면이 교차하지 않음");
         }
     }
+
 
 
     void CancelDeployment()

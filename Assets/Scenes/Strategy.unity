@@ -151,6 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eae1666bab4dc6458b3a29b821c0599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  armyCombatTickInterval: 0.5
+  armyBaseDamagePerSecond: 5
+  jetRegenPerSecond: 1
 --- !u!4 &77806188
 Transform:
   m_ObjectHideFlags: 0
@@ -1657,9 +1660,8 @@ MonoBehaviour:
   teamType: 0
   unitType: 1
   title: 22nd Infantry Div.
-  maxHP: 100
+  maxHP: 1000
   currentHP: 0
-  baseDamagePerSecond: 10
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 735781042}
 --- !u!114 &703610929
@@ -2989,9 +2991,8 @@ MonoBehaviour:
   teamType: 0
   unitType: 1
   title: 141st Infantry Div.
-  maxHP: 100
+  maxHP: 1000
   currentHP: 0
-  baseDamagePerSecond: 10
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 735781042}
 --- !u!1 &1621109461
@@ -3355,9 +3356,8 @@ MonoBehaviour:
   teamType: 1
   unitType: 0
   title: 53th Armor Div.
-  maxHP: 100
+  maxHP: 1000
   currentHP: 0
-  baseDamagePerSecond: 10
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 735781042}
 --- !u!1 &1945521301
@@ -3396,9 +3396,8 @@ MonoBehaviour:
   teamType: 1
   unitType: 1
   title: 27th Infantry Div.
-  maxHP: 100
+  maxHP: 1000
   currentHP: 0
-  baseDamagePerSecond: 10
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 735781042}
 --- !u!114 &1945521303
@@ -3548,9 +3547,8 @@ MonoBehaviour:
   teamType: 0
   unitType: 1
   title: 332nd Infantry Div.
-  maxHP: 100
+  maxHP: 1000
   currentHP: 0
-  baseDamagePerSecond: 10
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 735781042}
 --- !u!114 &1989884478
