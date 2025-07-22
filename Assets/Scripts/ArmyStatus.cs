@@ -66,13 +66,12 @@ public class ArmyStatus : MonoBehaviour
         if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused) return;
 
         UpdateBoxColliderSize();
-        HandleMovement();
         HandleCombatDetection();
         HandleAllyAvoidance();
         UpdateUILabel();
     }
 
-    private void HandleMovement()
+    public void HandleMovement()
     {
         ArmyStatus closest = null;
         float minDist = float.MaxValue;
