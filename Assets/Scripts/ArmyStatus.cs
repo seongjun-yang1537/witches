@@ -13,55 +13,148 @@ public class ArmyStatus : MonoBehaviour
     public UnitType unitType;
     public string title = "Unit";
     public float maxHP = 100f;
-    public float currentHP;
-    
+
+    [Header("이동 설정")]
+    public float speed = 2f;
+    public float contactRadius = 1.0f;
+    public float stopDistance = 0.6f;
+    public LayerMask enemyLayer;
+
+    [Header("아군 충돌 방지")]
+    public LayerMask allyLayer;
+    public float allyAvoidDistance = 0.5f;
+    public float allyPushStrength = 0.5f;
 
     [Header("UI 설정")]
     public GameObject uiPrefab;
     public Canvas uiCanvas;
-    private GameObject createdUI;
 
+    [Header("상태 정보")]
+    public float currentHP;
+
+    private BoxCollider boxCollider;
+    private GameObject createdUI;
     private readonly List<ArmyStatus> attackers = new List<ArmyStatus>();
+    private readonly List<ArmyStatus> inContact = new List<ArmyStatus>();
+
+    void OnValidate()
+    {
+        // teamType에 따라 적/아군 레이어를 자동 설정
+        string allyName = teamType.ToString();
+        string enemyName = (teamType == TeamType.Blue) ? TeamType.Red.ToString() : TeamType.Blue.ToString();
+        allyLayer = LayerMask.GetMask(allyName);
+        enemyLayer = LayerMask.GetMask(enemyName);
+    }
+
+    void OnEnable()
+    {
+        boxCollider = GetComponent<BoxCollider>();
+        UpdateBoxColliderSize();
+    }
 
     void Start()
     {
-        GameStateManager.Instance?.RegisterArmy(this);
         currentHP = maxHP;
+        GameStateManager.Instance?.RegisterArmy(this);
+        SetupUI();
+        StartCoroutine(DamageTickLoop());
+    }
 
-        SetUnitLabel(); // 병종 텍스트 자동 설정
+    void Update()
+    {
+        if (!Application.isPlaying) return;
+        if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused) return;
 
-        // ✅ UI 생성 및 WorldTextFollower 연결
-        if (uiPrefab != null && uiCanvas != null)
+        UpdateBoxColliderSize();
+        HandleMovement();
+        HandleCombatDetection();
+        HandleAllyAvoidance();
+        UpdateUILabel();
+    }
+
+    private void HandleMovement()
+    {
+        ArmyStatus closest = null;
+        float minDist = float.MaxValue;
+        foreach (var hit in Physics.OverlapSphere(transform.position, 20f, enemyLayer))
         {
-            createdUI = Instantiate(uiPrefab, uiCanvas.transform);
-            var follower = createdUI.GetComponent<WorldTextFollower>();
-            var tmpText = createdUI.GetComponent<TextMeshProUGUI>();
-
-            if (follower != null && tmpText != null)
+            var other = hit.GetComponent<ArmyStatus>();
+            if (other != null && other != this)
             {
-                follower.target = this.transform;
-                follower.status = this;
-                follower.uiText = tmpText;
-                follower.label = title;
-
-                float depth = transform.localScale.z;
-                float padding = 0.5f;
-                float distance = depth * 0.5f + padding;
-
-                // ✅ Blue는 뒤쪽(-forward), Red는 앞쪽(+forward) 방향에 표시
-                Vector3 direction = (teamType == TeamType.Red) ? transform.forward : -transform.forward;
-                Vector3 offset = direction * distance;
-                follower.offset = offset;
-
-                tmpText.alignment = (teamType == TeamType.Red)
-                    ? TextAlignmentOptions.TopGeoAligned
-                    : TextAlignmentOptions.BottomGeoAligned;
+                float dist = Vector3.Distance(transform.position, other.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closest = other;
+                }
             }
         }
+        if (closest != null)
+        {
+            var toTarget = closest.transform.position - transform.position;
+            if (toTarget.magnitude > stopDistance)
+                transform.position += toTarget.normalized * speed * Time.deltaTime;
+        }
+    }
 
-        Debug.Log($"[{title}] 생성됨 - TeamType: {teamType}");
+    private void HandleCombatDetection()
+    {
+        var current = new HashSet<ArmyStatus>();
+        foreach (var hit in Physics.OverlapSphere(transform.position, contactRadius, enemyLayer))
+        {
+            var other = hit.GetComponent<ArmyStatus>();
+            if (other != null && other != this)
+            {
+                current.Add(other);
+                if (!inContact.Contains(other))
+                {
+                    other.AddAttacker(this);
+                    inContact.Add(other);
+                }
+            }
+        }
+        for (int i = inContact.Count - 1; i >= 0; i--)
+        {
+            var oc = inContact[i];
+            if (!current.Contains(oc))
+            {
+                oc.RemoveAttacker(this);
+                inContact.RemoveAt(i);
+            }
+        }
+    }
 
-        StartCoroutine(DamageTickLoop());
+    private void HandleAllyAvoidance()
+    {
+        foreach (var hit in Physics.OverlapSphere(transform.position, allyAvoidDistance, allyLayer))
+        {
+            if (hit.transform == transform) continue;
+            var dir = transform.position - hit.transform.position;
+            dir.y = 0;
+            if (dir.sqrMagnitude < 0.001f) continue;
+            transform.position += dir.normalized * allyPushStrength * Time.deltaTime;
+        }
+    }
+
+    private void SetupUI()
+    {
+        if (uiPrefab == null || uiCanvas == null) return;
+        createdUI = Instantiate(uiPrefab, uiCanvas.transform);
+        var follower = createdUI.GetComponent<WorldTextFollower>();
+        var tmp = createdUI.GetComponent<TextMeshProUGUI>();
+        if (follower != null && tmp != null)
+        {
+            follower.target = transform;
+            follower.status = this;
+            follower.uiText = tmp;
+            follower.label = title;
+            var depth = transform.localScale.z;
+            var distance = depth * 0.5f + 0.5f;
+            var dir = (teamType == TeamType.Red) ? transform.forward : -transform.forward;
+            follower.offset = dir * distance;
+            tmp.alignment = (teamType == TeamType.Red) ?
+                TextAlignmentOptions.TopGeoAligned : TextAlignmentOptions.BottomGeoAligned;
+        }
     }
 
     private IEnumerator DamageTickLoop()
@@ -69,31 +162,20 @@ public class ArmyStatus : MonoBehaviour
         while (true)
         {
             if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
-            {
                 yield return null;
-                continue;
-            }
 
             if (attackers.Count > 0)
             {
-                foreach (var attacker in attackers)
+                foreach (var at in attackers)
                 {
-                    if (attacker == null) continue;
-
-                    float randomFactor = Random.Range(0.95f, 1.05f);
-                    float typeMultiplier = UnitAffinityManager.Instance.GetMultiplier(
-                        attacker.GetCombatUnitType(),
-                        this.GetCombatUnitType()
-                    );
-
-                    float tickInterval = PrototypeGameManager.Instance.armyCombatTickInterval;
-
-                    float baseDPS = PrototypeGameManager.Instance?.armyBaseDamagePerSecond ?? 10f;
-                    float damage = baseDPS * typeMultiplier * randomFactor * tickInterval;
-
-                    currentHP -= damage;
+                    if (at == null) continue;
+                    var randomFactor = Random.Range(0.95f, 1.05f);
+                    var typeMul = UnitAffinityManager.Instance
+                        .GetMultiplier(at.GetCombatUnitType(), GetCombatUnitType());
+                    var tick = PrototypeGameManager.Instance.armyCombatTickInterval;
+                    var baseDPS = PrototypeGameManager.Instance?.armyBaseDamagePerSecond ?? 10f;
+                    currentHP -= baseDPS * typeMul * randomFactor * tick;
                 }
-
                 if (currentHP <= 0f)
                 {
                     if (createdUI != null) Destroy(createdUI);
@@ -101,89 +183,47 @@ public class ArmyStatus : MonoBehaviour
                     yield break;
                 }
             }
-
-            float interval = PrototypeGameManager.Instance?.armyCombatTickInterval ?? 0.5f;
-            yield return new WaitForSeconds(interval);
+            var wait = PrototypeGameManager.Instance?.armyCombatTickInterval ?? 0.5f;
+            yield return new WaitForSeconds(wait);
         }
     }
 
-
-    /*void Update()
-    {
-        if (attackers.Count == 0) return;
-
-        // ✅ 게임이 일시정지 상태일 경우 데미지 계산 중단
-        if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
-            return;
-
-        foreach (var attacker in attackers)
-        {
-            if (attacker == null) continue;
-
-            float randomFactor = Random.Range(0.95f, 1.05f);
-            float typeMultiplier = UnitAffinityManager.Instance.GetMultiplier(
-                attacker.GetCombatUnitType(),
-                this.GetCombatUnitType()
-            );
-
-            float damage = attacker.baseDamagePerSecond * typeMultiplier * randomFactor * Time.deltaTime;
-            currentHP -= damage;
-        }
-
-
-        if (currentHP <= 0f)
-        {
-            if (createdUI != null) Destroy(createdUI);
-            Destroy(gameObject);
-        }
-    }*/
-
+    // === 공용 API ===
     public void AddAttacker(ArmyStatus attacker)
     {
         if (attacker != null && !attackers.Contains(attacker))
             attackers.Add(attacker);
     }
-
     public void RemoveAttacker(ArmyStatus attacker)
     {
         if (attacker != null)
             attackers.Remove(attacker);
     }
-
-    public int GetHPInt()
-    {
-        return Mathf.FloorToInt(currentHP);
-    }
-
+    public int GetHPInt() => Mathf.FloorToInt(currentHP);
     public CombatUnitType GetCombatUnitType()
     {
-        switch (unitType)
+        return unitType switch
         {
-            case UnitType.Infantry:
-                return CombatUnitType.Infantry;
-            case UnitType.Armor:
-                return CombatUnitType.Armor;
-            case UnitType.AntiAir:
-                return CombatUnitType.AntiAir;
-            default:
-                return CombatUnitType.Infantry;
-        }
+            UnitType.Infantry => CombatUnitType.Infantry,
+            UnitType.Armor => CombatUnitType.Armor,
+            UnitType.AntiAir => CombatUnitType.AntiAir,
+            _ => CombatUnitType.Infantry
+        };
     }
 
-    void SetUnitLabel()
+    private void UpdateUILabel()
     {
-        TextMeshPro label = GetComponentInChildren<TextMeshPro>();
-        if (label == null) return;
+        if (createdUI == null) return;
+        var tmp = createdUI.GetComponent<TextMeshProUGUI>();
+        if (tmp != null)
+            tmp.text = $"{title} {GetHPInt()}";
+    }
 
-        string code = unitType switch
-        {
-            UnitType.Infantry => "Inf",
-            UnitType.Armor => "Arm",
-            UnitType.AntiAir => "AA",
-            _ => "???"
-        };
-
-        label.text = code;        
+    private void UpdateBoxColliderSize()
+    {
+        if (boxCollider == null) return;
+        boxCollider.size = Vector3.one;
+        boxCollider.center = Vector3.zero;
     }
 
     void OnDestroy()

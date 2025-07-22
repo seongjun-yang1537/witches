@@ -2380,7 +2380,6 @@ GameObject:
   - component: {fileID: 703610932}
   - component: {fileID: 703610931}
   - component: {fileID: 703610930}
-  - component: {fileID: 703610929}
   - component: {fileID: 703610928}
   m_Layer: 8
   m_Name: BlueArmy02
@@ -2405,21 +2404,6 @@ MonoBehaviour:
   unitType: 1
   title: 22nd Infantry Div.
   maxHP: 1000
-  currentHP: 0
-  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
-  uiCanvas: {fileID: 735781042}
---- !u!114 &703610929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 703610927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   speed: 0.15
   contactRadius: 0.5
   stopDistance: 0.5
@@ -2431,7 +2415,9 @@ MonoBehaviour:
     m_Bits: 256
   allyAvoidDistance: 0.5
   allyPushStrength: 0.5
-  selfStatus: {fileID: 703610928}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
+  uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!65 &703610930
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3204,7 +3190,6 @@ GameObject:
   - component: {fileID: 1197419877}
   - component: {fileID: 1197419876}
   - component: {fileID: 1197419875}
-  - component: {fileID: 1197419874}
   - component: {fileID: 1197419873}
   m_Layer: 9
   m_Name: RedArmy04
@@ -3229,21 +3214,6 @@ MonoBehaviour:
   unitType: 1
   title: 6th Infantry Div.
   maxHP: 800
-  currentHP: 0
-  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
-  uiCanvas: {fileID: 735781042}
---- !u!114 &1197419874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1197419872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   speed: 0.15
   contactRadius: 0.5
   stopDistance: 0.5
@@ -3255,7 +3225,9 @@ MonoBehaviour:
     m_Bits: 512
   allyAvoidDistance: 0.5
   allyPushStrength: 0.5
-  selfStatus: {fileID: 1197419873}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
+  uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!65 &1197419875
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4065,7 +4037,6 @@ GameObject:
   - component: {fileID: 1511271867}
   - component: {fileID: 1511271866}
   - component: {fileID: 1511271865}
-  - component: {fileID: 1511271869}
   - component: {fileID: 1511271870}
   m_Layer: 8
   m_Name: BlueArmy01
@@ -4161,30 +4132,6 @@ Transform:
   - {fileID: 1128336252}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1511271869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1511271864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.15
-  contactRadius: 0.5
-  stopDistance: 0.5
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  allyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  allyAvoidDistance: 0.5
-  allyPushStrength: 0.5
-  selfStatus: {fileID: 1511271870}
 --- !u!114 &1511271870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4201,9 +4148,20 @@ MonoBehaviour:
   unitType: 1
   title: 141st Infantry Div.
   maxHP: 1000
-  currentHP: 0
+  speed: 0.15
+  contactRadius: 0.5
+  stopDistance: 0.5
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  allyLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  allyAvoidDistance: 0.5
+  allyPushStrength: 0.5
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!1 &1518280694
 GameObject:
   m_ObjectHideFlags: 0
@@ -4216,7 +4174,6 @@ GameObject:
   - component: {fileID: 1518280699}
   - component: {fileID: 1518280698}
   - component: {fileID: 1518280697}
-  - component: {fileID: 1518280696}
   - component: {fileID: 1518280695}
   - component: {fileID: 1518280701}
   m_Layer: 9
@@ -4242,21 +4199,6 @@ MonoBehaviour:
   unitType: 2
   title: 35th AA Div.
   maxHP: 250
-  currentHP: 0
-  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
-  uiCanvas: {fileID: 735781042}
---- !u!114 &1518280696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1518280694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   speed: 0.2
   contactRadius: 0.5
   stopDistance: 0.5
@@ -4268,7 +4210,9 @@ MonoBehaviour:
     m_Bits: 512
   allyAvoidDistance: 0.5
   allyPushStrength: 0.5
-  selfStatus: {fileID: 1518280695}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
+  uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!65 &1518280697
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5096,7 +5040,6 @@ GameObject:
   - component: {fileID: 1848191287}
   - component: {fileID: 1848191286}
   - component: {fileID: 1848191285}
-  - component: {fileID: 1848191284}
   - component: {fileID: 1848191283}
   m_Layer: 9
   m_Name: RedArmy05
@@ -5121,21 +5064,6 @@ MonoBehaviour:
   unitType: 0
   title: 9th Armor Div.
   maxHP: 500
-  currentHP: 0
-  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
-  uiCanvas: {fileID: 735781042}
---- !u!114 &1848191284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1848191282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   speed: 0.3
   contactRadius: 0.5
   stopDistance: 0.5
@@ -5147,7 +5075,9 @@ MonoBehaviour:
     m_Bits: 512
   allyAvoidDistance: 0.5
   allyPushStrength: 0.5
-  selfStatus: {fileID: 1848191283}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
+  uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!65 &1848191285
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5247,7 +5177,6 @@ GameObject:
   - component: {fileID: 1937559149}
   - component: {fileID: 1937559148}
   - component: {fileID: 1937559147}
-  - component: {fileID: 1937559146}
   - component: {fileID: 1937559145}
   m_Layer: 8
   m_Name: BlueArmy04
@@ -5272,21 +5201,6 @@ MonoBehaviour:
   unitType: 0
   title: 9th Armor Div.
   maxHP: 800
-  currentHP: 0
-  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
-  uiCanvas: {fileID: 735781042}
---- !u!114 &1937559146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937559144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   speed: 0.3
   contactRadius: 0.5
   stopDistance: 0.5
@@ -5298,7 +5212,9 @@ MonoBehaviour:
     m_Bits: 256
   allyAvoidDistance: 0.5
   allyPushStrength: 0.5
-  selfStatus: {fileID: 1937559145}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
+  uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!65 &1937559147
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5490,7 +5406,6 @@ GameObject:
   - component: {fileID: 1941192393}
   - component: {fileID: 1941192392}
   - component: {fileID: 1941192391}
-  - component: {fileID: 1941192395}
   - component: {fileID: 1941192396}
   m_Layer: 9
   m_Name: RedArmy01
@@ -5586,30 +5501,6 @@ Transform:
   - {fileID: 2022293507}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1941192395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941192390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.3
-  contactRadius: 0.5
-  stopDistance: 0.5
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  allyLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  allyAvoidDistance: 0.5
-  allyPushStrength: 0.5
-  selfStatus: {fileID: 1941192396}
 --- !u!114 &1941192396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5626,9 +5517,20 @@ MonoBehaviour:
   unitType: 0
   title: 53th Armor Div.
   maxHP: 750
-  currentHP: 0
+  speed: 0.3
+  contactRadius: 0.5
+  stopDistance: 0.5
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  allyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  allyAvoidDistance: 0.5
+  allyPushStrength: 0.5
   uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
   uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!1 &1941901060
 GameObject:
   m_ObjectHideFlags: 0
@@ -5790,7 +5692,6 @@ GameObject:
   - component: {fileID: 1945521306}
   - component: {fileID: 1945521305}
   - component: {fileID: 1945521304}
-  - component: {fileID: 1945521303}
   - component: {fileID: 1945521302}
   m_Layer: 9
   m_Name: RedArmy02
@@ -5815,21 +5716,6 @@ MonoBehaviour:
   unitType: 1
   title: 27th Infantry Div.
   maxHP: 1000
-  currentHP: 0
-  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
-  uiCanvas: {fileID: 735781042}
---- !u!114 &1945521303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945521301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   speed: 0.15
   contactRadius: 0.5
   stopDistance: 0.5
@@ -5841,7 +5727,9 @@ MonoBehaviour:
     m_Bits: 512
   allyAvoidDistance: 0.5
   allyPushStrength: 0.5
-  selfStatus: {fileID: 1945521302}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
+  uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!65 &1945521304
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5941,7 +5829,6 @@ GameObject:
   - component: {fileID: 1989884481}
   - component: {fileID: 1989884480}
   - component: {fileID: 1989884479}
-  - component: {fileID: 1989884478}
   - component: {fileID: 1989884477}
   m_Layer: 8
   m_Name: BlueArmy03
@@ -5966,21 +5853,6 @@ MonoBehaviour:
   unitType: 1
   title: 332nd Infantry Div.
   maxHP: 1000
-  currentHP: 0
-  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
-  uiCanvas: {fileID: 735781042}
---- !u!114 &1989884478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1989884476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b91bdf37532b7474fb36177ed19b86cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   speed: 0.15
   contactRadius: 0.5
   stopDistance: 0.5
@@ -5992,7 +5864,9 @@ MonoBehaviour:
     m_Bits: 256
   allyAvoidDistance: 0.5
   allyPushStrength: 0.5
-  selfStatus: {fileID: 1989884477}
+  uiPrefab: {fileID: 5823997921125684103, guid: 8153e0a8cfd8c7b439df3074a11e300d, type: 3}
+  uiCanvas: {fileID: 735781042}
+  currentHP: 0
 --- !u!65 &1989884479
 BoxCollider:
   m_ObjectHideFlags: 0
