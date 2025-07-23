@@ -15,7 +15,11 @@ public class ArmyAIController : MonoBehaviour
     [Header("AI 설정")]
     public AIState currentState = AIState.Advance;
     [Range(0f, 1f)]
-    public float retreatHPThreshold = 0.75f;        // 잔여 HP 비율
+    public float retreatHPThreshold = 0.75f;
+
+    [Header("적 감지 설정")]
+    [Tooltip("적 유닛을 감지할 반경")]
+    public float detectionRadius = 2f;
 
     private ArmyStatus armyStatus;
     private AIState previousState;
@@ -41,58 +45,98 @@ public class ArmyAIController : MonoBehaviour
 
         switch (currentState)
         {
-            case AIState.Advance:
-                HandleAdvance();
-                break;
-            case AIState.Retreat:
-                HandleRetreat();
-                break;
-            case AIState.Regroup:
-                HandleRegroup();
-                break;
+            case AIState.Advance: HandleAdvance(); break;
+            case AIState.Retreat: HandleRetreat(); break;
+            case AIState.Regroup: HandleRegroup(); break;
         }
     }
 
-    // HP 비율로 상태 전환
     private void EvaluateState()
     {
         float hpRatio = armyStatus.currentHP / armyStatus.maxHP;
-        currentState = (hpRatio <= retreatHPThreshold) ? AIState.Retreat : AIState.Advance;
+        currentState = (hpRatio <= retreatHPThreshold)
+            ? AIState.Retreat
+            : AIState.Advance;
     }
 
-    // Advance → 적 추적 이동
     private void HandleAdvance()
     {
-        armyStatus.HandleMovement();
-    }
-
-    // Retreat → NavMeshAgent를 통해 가장 가까운 후퇴 지점으로 이동
-    private void HandleRetreat()
-    {
-        Transform retreatPoint = RallyPointManager.Instance
-            .GetNearestRetreatPoint(armyStatus.teamType, transform.position);
-
-        if (retreatPoint != null)
+        Collider[] hits = Physics.OverlapSphere(
+            transform.position,
+            detectionRadius,
+            armyStatus.enemyLayer
+        );
+        if (hits.Length > 0)
         {
-            // NavMeshAgent 기반 이동 호출
-            armyStatus.MoveTo(retreatPoint.position);
+            ArmyStatus closest = null;
+            float minD = float.MaxValue;
+            foreach (var col in hits)
+            {
+                var enemy = col.GetComponent<ArmyStatus>();
+                if (enemy == null) continue;
+                float d = Vector3.Distance(transform.position, enemy.transform.position);
+                if (d < minD)
+                {
+                    minD = d;
+                    closest = enemy;
+                }
+            }
+            if (closest != null)
+            {
+                armyStatus.MoveTo(closest.transform.position);
+                return;
+            }
         }
+
+        CityStatus[] cities = FindObjectsOfType<CityStatus>();
+        CityStatus nearestCity = null;
+        float minDistCity = float.MaxValue;
+        foreach (var city in cities)
+        {
+            if (city.owner == armyStatus.teamType) continue;
+            float d = Vector3.Distance(transform.position, city.transform.position);
+            if (d < minDistCity)
+            {
+                minDistCity = d;
+                nearestCity = city;
+            }
+        }
+        if (nearestCity != null)
+            armyStatus.MoveTo(nearestCity.transform.position);
         else
         {
-            Debug.LogWarning($"[ArmyAI] No retreat points found for team {armyStatus.teamType}");
+            Debug.LogWarning($"[ArmyAI] 적 도시가 없습니다: 팀={armyStatus.teamType}");
             currentState = AIState.Regroup;
         }
     }
 
-    // Regroup → 향후 재배치 로직
-    private void HandleRegroup()
+    private void HandleRetreat()
     {
-        // TODO: 아군·적 재탐색 후 상태 결정
+        Transform retreatPoint = RallyPointManager.Instance
+            .GetNearestRetreatPoint(armyStatus.teamType, transform.position);
+        if (retreatPoint != null)
+            armyStatus.MoveTo(retreatPoint.position);
+        else
+        {
+            Debug.LogWarning($"[ArmyAI] 뒤로 물러날 지점이 없습니다: 팀={armyStatus.teamType}");
+            currentState = AIState.Regroup;
+        }
     }
 
-    // 외부에서 강제 상태 설정
+    private void HandleRegroup()
+    {
+        // TODO: 재정비 로직
+    }
+
     public void SetState(AIState newState)
     {
         currentState = newState;
+    }
+
+    // 에디터 씬뷰에서 감지 반경을 시각화
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

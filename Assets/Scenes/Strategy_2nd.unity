@@ -1487,7 +1487,7 @@ GameObject:
   - component: {fileID: 366571517}
   - component: {fileID: 366571516}
   m_Layer: 4
-  m_Name: Stream001 (4)
+  m_Name: Stream003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1732,6 +1732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &400383144
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2032,6 +2033,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &428197399
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2279,7 +2281,7 @@ GameObject:
   - component: {fileID: 445132053}
   - component: {fileID: 445132052}
   m_Layer: 4
-  m_Name: Stream001 (3)
+  m_Name: Stream005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2442,7 +2444,7 @@ GameObject:
   - component: {fileID: 546168316}
   - component: {fileID: 546168315}
   m_Layer: 4
-  m_Name: Stream001 (1)
+  m_Name: Stream007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3406,6 +3408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &1029665150
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3984,6 +3987,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &1200776924
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4316,7 +4320,7 @@ GameObject:
   - component: {fileID: 1315903451}
   - component: {fileID: 1315903450}
   m_Layer: 4
-  m_Name: Stream001 (6)
+  m_Name: Stream002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4590,7 +4594,7 @@ GameObject:
   - component: {fileID: 1347512209}
   - component: {fileID: 1347512208}
   m_Layer: 4
-  m_Name: Stream001 (2)
+  m_Name: Stream006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4979,7 +4983,7 @@ GameObject:
   - component: {fileID: 1542787947}
   - component: {fileID: 1542787946}
   m_Layer: 4
-  m_Name: Stream001 (5)
+  m_Name: Stream004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5880,6 +5884,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &1902060504
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6133,6 +6138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &1920310297
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6602,6 +6608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &1983761499
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6777,6 +6784,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &2006427261
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -7086,6 +7094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   retreatHPThreshold: 0.75
+  detectionRadius: 2
 --- !u!195 &2102398212
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -7407,7 +7416,9 @@ SceneRoots:
   - {fileID: 266948317}
   - {fileID: 128236851}
   - {fileID: 1508851478}
+  - {fileID: 663132117}
   - {fileID: 402119784}
+  - {fileID: 604810259}
   - {fileID: 400383139}
   - {fileID: 1983761497}
   - {fileID: 428197397}
@@ -7419,7 +7430,5 @@ SceneRoots:
   - {fileID: 1029665148}
   - {fileID: 1232686982}
   - {fileID: 93849671}
-  - {fileID: 663132117}
   - {fileID: 237315581}
   - {fileID: 1967565123}
-  - {fileID: 604810259}
