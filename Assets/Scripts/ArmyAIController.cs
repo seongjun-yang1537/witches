@@ -9,20 +9,20 @@ public class ArmyAIController : MonoBehaviour
     {
         Advance,
         Retreat,
+        Healing,
         Regroup
     }
 
     [Header("AI 설정")]
     public AIState currentState = AIState.Advance;
-    [Range(0f, 1f)]
-    public float retreatHPThreshold = 0.75f;
+    [Range(0f, 1f)] public float retreatHPThreshold = 0.75f;
 
-    [Header("적 감지 설정")]
-    [Tooltip("적 유닛을 감지할 반경")]
+    [Header("적 감지 반경")]
     public float detectionRadius = 2f;
 
     private ArmyStatus armyStatus;
     private AIState previousState;
+    private bool isInCityTrigger = false;
 
     void Awake()
     {
@@ -35,14 +35,32 @@ public class ArmyAIController : MonoBehaviour
         if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused)
             return;
 
-        EvaluateState();
-
-        if (currentState != previousState)
+        // ── 1) Healing 재진입 체크 ──
+        // 전투 중단 후에도 도시 트리거 내라면 다시 Healing 상태로
+        if (isInCityTrigger && armyStatus.currentHP < armyStatus.maxHP && currentState != AIState.Healing)
         {
-            Debug.Log($"[ArmyAI] State changed: {previousState} → {currentState}");
-            previousState = currentState;
+            Debug.Log("[ArmyAI] Re-enter Healing (still in city)");
+            armyStatus.StopMovement();
+            currentState = AIState.Healing;
         }
 
+        // ── 2) Healing 처리 ──
+        if (currentState == AIState.Healing)
+        {
+            HandleHealing();
+            LogStateChange();
+            return;
+        }
+
+        // ── 3) HP 기준 Advance/Retreat ──
+        float hpRatio = armyStatus.currentHP / armyStatus.maxHP;
+        currentState = (hpRatio <= retreatHPThreshold)
+            ? AIState.Retreat
+            : AIState.Advance;
+
+        LogStateChange();
+
+        // ── 4) 일반 상태 처리 ──
         switch (currentState)
         {
             case AIState.Advance: HandleAdvance(); break;
@@ -51,89 +69,121 @@ public class ArmyAIController : MonoBehaviour
         }
     }
 
-    private void EvaluateState()
+    void LogStateChange()
     {
-        float hpRatio = armyStatus.currentHP / armyStatus.maxHP;
-        currentState = (hpRatio <= retreatHPThreshold)
-            ? AIState.Retreat
-            : AIState.Advance;
+        if (currentState != previousState)
+        {
+            Debug.Log($"[ArmyAI] State changed: {previousState} → {currentState}");
+            previousState = currentState;
+        }
     }
 
-    private void HandleAdvance()
+    void HandleAdvance()
     {
-        Collider[] hits = Physics.OverlapSphere(
-            transform.position,
-            detectionRadius,
-            armyStatus.enemyLayer
-        );
+        // 적 유닛 감지 및 교전
+        var hits = Physics.OverlapSphere(transform.position, detectionRadius, armyStatus.enemyLayer);
         if (hits.Length > 0)
         {
-            ArmyStatus closest = null;
-            float minD = float.MaxValue;
+            ArmyStatus closest = null; float minD = float.MaxValue;
             foreach (var col in hits)
             {
-                var enemy = col.GetComponent<ArmyStatus>();
-                if (enemy == null) continue;
-                float d = Vector3.Distance(transform.position, enemy.transform.position);
-                if (d < minD)
-                {
-                    minD = d;
-                    closest = enemy;
-                }
+                var e = col.GetComponent<ArmyStatus>();
+                if (e == null) continue;
+                float d = Vector3.Distance(transform.position, e.transform.position);
+                if (d < minD) { minD = d; closest = e; }
             }
             if (closest != null)
             {
+                armyStatus.ResumeMovement();
                 armyStatus.MoveTo(closest.transform.position);
                 return;
             }
         }
 
-        CityStatus[] cities = FindObjectsOfType<CityStatus>();
-        CityStatus nearestCity = null;
-        float minDistCity = float.MaxValue;
-        foreach (var city in cities)
+        // 적 도시로 전진
+        CityStatus nearestCity = null; float minDist = float.MaxValue;
+        foreach (var city in FindObjectsOfType<CityStatus>())
         {
             if (city.owner == armyStatus.teamType) continue;
             float d = Vector3.Distance(transform.position, city.transform.position);
-            if (d < minDistCity)
-            {
-                minDistCity = d;
-                nearestCity = city;
-            }
+            if (d < minDist) { minDist = d; nearestCity = city; }
         }
         if (nearestCity != null)
+        {
+            armyStatus.ResumeMovement();
             armyStatus.MoveTo(nearestCity.transform.position);
-        else
-        {
-            Debug.LogWarning($"[ArmyAI] 적 도시가 없습니다: 팀={armyStatus.teamType}");
-            currentState = AIState.Regroup;
         }
+        else currentState = AIState.Regroup;
     }
 
-    private void HandleRetreat()
+    void HandleRetreat()
     {
-        Transform retreatPoint = RallyPointManager.Instance
+        var rp = RallyPointManager.Instance
             .GetNearestRetreatPoint(armyStatus.teamType, transform.position);
-        if (retreatPoint != null)
-            armyStatus.MoveTo(retreatPoint.position);
-        else
+        if (rp != null)
         {
-            Debug.LogWarning($"[ArmyAI] 뒤로 물러날 지점이 없습니다: 팀={armyStatus.teamType}");
-            currentState = AIState.Regroup;
+            armyStatus.ResumeMovement();
+            armyStatus.MoveTo(rp.position);
+        }
+        else currentState = AIState.Regroup;
+    }
+
+    void HandleHealing()
+    {
+        // 전투 발생 시 중단
+        var hits = Physics.OverlapSphere(transform.position, detectionRadius, armyStatus.enemyLayer);
+        if (hits.Length > 0)
+        {
+            Debug.Log("[ArmyAI] Combat during HEALING → switch to ADVANCE");
+            currentState = AIState.Advance;
+            return;
+        }
+
+        // 회복
+        float before = armyStatus.currentHP;
+        armyStatus.currentHP += armyStatus.healPerSecond * Time.deltaTime;
+        Debug.Log($"[ArmyAI] Healing: {before:F1} → {armyStatus.currentHP:F1}");
+
+        // 완전 회복 시
+        if (armyStatus.currentHP >= armyStatus.maxHP)
+        {
+            armyStatus.currentHP = armyStatus.maxHP;
+            Debug.Log("[ArmyAI] Fully healed → switch to ADVANCE");
+            isInCityTrigger = false;
+
+            armyStatus.ResumeMovement();
+            currentState = AIState.Advance;
+            HandleAdvance();
         }
     }
 
-    private void HandleRegroup()
+    void HandleRegroup()
     {
         // TODO: 재정비 로직
     }
 
-    public void SetState(AIState newState)
+    void OnTriggerEnter(Collider other)
     {
-        currentState = newState;
+        var city = other.GetComponent<CityStatus>();
+        if (city != null && city.owner == armyStatus.teamType)
+        {
+            Debug.Log($"[ArmyAI] Entered friendly city → start HEALING");
+            isInCityTrigger = true;
+            armyStatus.StopMovement();
+            currentState = AIState.Healing;
+        }
     }
 
-    // 에디터 씬뷰에서 감지 반경을 시각화
+    void OnTriggerExit(Collider other)
+    {
+        var city = other.GetComponent<CityStatus>();
+        if (city != null && city.owner == armyStatus.teamType)
+        {
+            Debug.Log("[ArmyAI] Exited friendly city trigger");
+            isInCityTrigger = false;
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

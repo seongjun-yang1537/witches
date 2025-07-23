@@ -1623,6 +1623,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -1924,6 +1925,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -3299,6 +3301,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -3878,6 +3881,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -5775,6 +5779,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -6029,6 +6034,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -6499,6 +6505,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -6675,6 +6682,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -6985,6 +6993,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
+  healPerSecond: 10
   allyLayer:
     serializedVersion: 2
     m_Bits: 256

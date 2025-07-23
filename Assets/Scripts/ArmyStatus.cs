@@ -21,6 +21,10 @@ public class ArmyStatus : MonoBehaviour
     public float stopDistance = 0.6f;
     public LayerMask enemyLayer;
 
+    [Header("회복 설정")]
+    [Tooltip("도시에 도착했을 때 초당 회복량")]
+    public float healPerSecond = 10f;
+
     [Header("아군 충돌 방지")]
     public LayerMask allyLayer;
     public float allyAvoidDistance = 0.5f;
@@ -270,8 +274,28 @@ public class ArmyStatus : MonoBehaviour
         boxCollider.center = Vector3.zero;
     }
 
+    public void StopMovement()
+    {
+        if (agent != null)
+        {
+            agent.ResetPath();
+            agent.isStopped = true;
+        }
+    }
+
+    public void ResumeMovement()
+    {
+        if (agent != null)
+        {
+            agent.isStopped = false;
+        }
+    }
+
+
+
     void OnDestroy()
     {
         GameStateManager.Instance?.UnregisterArmy(this);
     }
+
 }
