@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ArmyStatus : MonoBehaviour
 {
@@ -32,14 +33,16 @@ public class ArmyStatus : MonoBehaviour
     [Header("상태 정보")]
     public float currentHP;
 
+    // 내부 컴포넌트
     private BoxCollider boxCollider;
     private GameObject createdUI;
     private readonly List<ArmyStatus> attackers = new List<ArmyStatus>();
     private readonly List<ArmyStatus> inContact = new List<ArmyStatus>();
+    private NavMeshAgent agent;
 
     void OnValidate()
     {
-        // teamType에 따라 적/아군 레이어를 자동 설정
+        // teamType에 따라 자동으로 레이어 마스크 설정
         string allyName = teamType.ToString();
         string enemyName = (teamType == TeamType.Blue) ? TeamType.Red.ToString() : TeamType.Blue.ToString();
         allyLayer = LayerMask.GetMask(allyName);
@@ -50,6 +53,18 @@ public class ArmyStatus : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider>();
         UpdateBoxColliderSize();
+    }
+
+    void Awake()
+    {
+        // NavMeshAgent 컴포넌트 초기화 및 파라미터 동기화
+        agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.speed = speed;
+            agent.stoppingDistance = stopDistance;
+            agent.autoBraking = false;
+        }
     }
 
     void Start()
@@ -65,14 +80,30 @@ public class ArmyStatus : MonoBehaviour
         if (!Application.isPlaying) return;
         if (PrototypeGameManager.Instance != null && PrototypeGameManager.Instance.IsGameplayPaused) return;
 
+        // 매 프레임 전투, 회피, UI 업데이트
         UpdateBoxColliderSize();
         HandleCombatDetection();
         HandleAllyAvoidance();
         UpdateUILabel();
     }
 
+    /// <summary>
+    /// NavMeshAgent를 이용해 목적지로 이동합니다.
+    /// </summary>
+    public void MoveTo(Vector3 destination)
+    {
+        if (agent == null) return;
+        agent.SetDestination(destination);
+    }
+
+    /// <summary>
+    /// NavMeshAgent 기반으로 가장 가까운 적을 찾아 추적 이동합니다.
+    /// </summary>
     public void HandleMovement()
     {
+        if (agent == null) return;
+
+        // 가장 가까운 적 찾기
         ArmyStatus closest = null;
         float minDist = float.MaxValue;
         foreach (var hit in Physics.OverlapSphere(transform.position, 20f, enemyLayer))
@@ -88,11 +119,24 @@ public class ArmyStatus : MonoBehaviour
                 }
             }
         }
+
         if (closest != null)
         {
-            var toTarget = closest.transform.position - transform.position;
-            if (toTarget.magnitude > stopDistance)
-                transform.position += toTarget.normalized * speed * Time.deltaTime;
+            float distance = Vector3.Distance(transform.position, closest.transform.position);
+            if (distance > stopDistance)
+            {
+                agent.SetDestination(closest.transform.position);
+            }
+            else
+            {
+                if (agent.hasPath)
+                    agent.ResetPath();
+            }
+        }
+        else
+        {
+            if (agent.hasPath)
+                agent.ResetPath();
         }
     }
 
@@ -187,7 +231,7 @@ public class ArmyStatus : MonoBehaviour
         }
     }
 
-    // === 공용 API ===
+    #region Public API
     public void AddAttacker(ArmyStatus attacker)
     {
         if (attacker != null && !attackers.Contains(attacker))
@@ -209,6 +253,7 @@ public class ArmyStatus : MonoBehaviour
             _ => CombatUnitType.Infantry
         };
     }
+    #endregion
 
     private void UpdateUILabel()
     {

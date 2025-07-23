@@ -66,7 +66,7 @@ public class InfluenceGrid : MonoBehaviour
         }
 
         // 3) RetreatPoint별 영향력 투사
-        var rps = FindObjectsOfType<RetreatPoint>();
+        var rps = FindObjectsOfType<CityStatus>();
         foreach (var rp in rps)
         {
             Vector2Int gpRp = WorldToGrid(rp.transform.position);
@@ -83,7 +83,7 @@ public class InfluenceGrid : MonoBehaviour
                     float weight = Mathf.Clamp01(1f - (dist / influenceRadius));
                     float addRp = strengthRp * weight;
 
-                    if (rp.teamType == ArmyStatus.TeamType.Blue)
+                    if (rp.owner == ArmyStatus.TeamType.Blue)
                         inflBlue[x, y] += addRp;
                     else
                         inflRed[x, y] += addRp;

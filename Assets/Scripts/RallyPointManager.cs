@@ -14,10 +14,10 @@ public class RallyPointManager : MonoBehaviour
         else { Destroy(gameObject); return; }
 
         // 씬에 있는 모든 RetreatPoint 컴포넌트 검색
-        var all = FindObjectsOfType<RetreatPoint>();
+        var all = FindObjectsOfType<CityStatus>();
         foreach (var rp in all)
         {
-            if (rp.teamType == ArmyStatus.TeamType.Blue)
+            if (rp.owner == ArmyStatus.TeamType.Blue)
                 bluePoints.Add(rp.transform);
             else
                 redPoints.Add(rp.transform);
