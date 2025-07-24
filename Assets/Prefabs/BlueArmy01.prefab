@@ -326,6 +326,7 @@ MonoBehaviour:
   currentState: 0
   retreatHPThreshold: 0.75
   detectionRadius: 2
+  borderCrossLimit: 2.5
 --- !u!195 &8715386774502729231
 NavMeshAgent:
   m_ObjectHideFlags: 0
