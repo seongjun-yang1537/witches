@@ -36,7 +36,6 @@ public class ArmyAIController : MonoBehaviour
             return;
 
         // ── 1) Healing 재진입 체크 ──
-        // 전투 중단 후에도 도시 트리거 내라면 다시 Healing 상태로
         if (isInCityTrigger && armyStatus.currentHP < armyStatus.maxHP && currentState != AIState.Healing)
         {
             Debug.Log("[ArmyAI] Re-enter Healing (still in city)");
@@ -54,18 +53,33 @@ public class ArmyAIController : MonoBehaviour
 
         // ── 3) HP 기준 Advance/Retreat ──
         float hpRatio = armyStatus.currentHP / armyStatus.maxHP;
-        currentState = (hpRatio <= retreatHPThreshold)
-            ? AIState.Retreat
-            : AIState.Advance;
+        AIState newState = (hpRatio <= retreatHPThreshold) ? AIState.Retreat : AIState.Advance;
 
+        // 상태 전환 시 한 번만 Warlog 기록
+        if (newState != currentState)
+        {
+            currentState = newState;
+            if (currentState == AIState.Retreat)
+            {
+                WarlogManager.Instance.LogEvent(armyStatus.title, "Start Retreat");
+            }
+        }
+
+        // 상태 변경 로깅(디버그용)
         LogStateChange();
 
         // ── 4) 일반 상태 처리 ──
         switch (currentState)
         {
-            case AIState.Advance: HandleAdvance(); break;
-            case AIState.Retreat: HandleRetreat(); break;
-            case AIState.Regroup: HandleRegroup(); break;
+            case AIState.Advance:
+                HandleAdvance();
+                break;
+            case AIState.Retreat:
+                HandleRetreat();
+                break;
+            case AIState.Regroup:
+                HandleRegroup();
+                break;
         }
     }
 
@@ -80,7 +94,7 @@ public class ArmyAIController : MonoBehaviour
 
     void HandleAdvance()
     {
-        // 적 유닛 감지 및 교전
+        // … (종전 코드 유지) :contentReference[oaicite:0]{index=0}
         var hits = Physics.OverlapSphere(transform.position, detectionRadius, armyStatus.enemyLayer);
         if (hits.Length > 0)
         {
@@ -100,7 +114,6 @@ public class ArmyAIController : MonoBehaviour
             }
         }
 
-        // 적 도시로 전진
         CityStatus nearestCity = null; float minDist = float.MaxValue;
         foreach (var city in FindObjectsOfType<CityStatus>())
         {
@@ -118,6 +131,7 @@ public class ArmyAIController : MonoBehaviour
 
     void HandleRetreat()
     {
+        // 단순 이동만 수행; 로그는 Update()에서 한 번만 기록
         var rp = RallyPointManager.Instance
             .GetNearestRetreatPoint(armyStatus.teamType, transform.position);
         if (rp != null)
@@ -149,6 +163,7 @@ public class ArmyAIController : MonoBehaviour
         {
             armyStatus.currentHP = armyStatus.maxHP;
             Debug.Log("[ArmyAI] Fully healed → switch to ADVANCE");
+            WarlogManager.Instance.LogEvent(armyStatus.title, "Healing Completed");
             isInCityTrigger = false;
 
             armyStatus.ResumeMovement();
@@ -168,6 +183,7 @@ public class ArmyAIController : MonoBehaviour
         if (city != null && city.owner == armyStatus.teamType)
         {
             Debug.Log($"[ArmyAI] Entered friendly city → start HEALING");
+            WarlogManager.Instance.LogEvent(armyStatus.title, "Start Healing");
             isInCityTrigger = true;
             armyStatus.StopMovement();
             currentState = AIState.Healing;
