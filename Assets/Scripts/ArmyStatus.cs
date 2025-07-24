@@ -37,6 +37,9 @@ public class ArmyStatus : MonoBehaviour
     [Header("상태 정보")]
     public float currentHP;
 
+    // 여기에 팀별 색상을 세팅해 둡니다.
+    public Color TeamColor => teamType == TeamType.Red ? Color.red : Color.blue;
+
     // 내부 컴포넌트
     private BoxCollider boxCollider;
     private GameObject createdUI;
@@ -155,11 +158,31 @@ public class ArmyStatus : MonoBehaviour
                 current.Add(other);
                 if (!inContact.Contains(other))
                 {
-                    other.AddAttacker(this);
+                    // 적 유닛과 최초 접촉 시점
                     inContact.Add(other);
+
+                    // 중복 로그 방지를 위해, 팀 Blue만 또는 이름 순으로 호출
+                    if (teamType == TeamType.Blue || string.Compare(title, other.title) < 0)
+                    {
+                        // Rich Text를 활용해 팀색 넣기
+                        string hexA = ColorUtility.ToHtmlStringRGB(TeamColor);
+                        string hexB = ColorUtility.ToHtmlStringRGB(other.TeamColor);
+                        string nameA = $"<color=#{hexA}>{title}</color>";
+                        string nameB = $"<color=#{hexB}>{other.title}</color>";
+
+                        // “양측 ↔ Combat Started” 형식으로 로그
+                        WarlogManager.Instance.LogEvent(
+                            $"{nameA} ↔ {nameB}",
+                            "Combat Started"
+                        );
+                    }
+
+                    // 기존 공격자 등록
+                    other.AddAttacker(this);
                 }
             }
         }
+        // 접촉이 끝난 적은 리스트에서 제거
         for (int i = inContact.Count - 1; i >= 0; i--)
         {
             var oc = inContact[i];
@@ -223,17 +246,27 @@ public class ArmyStatus : MonoBehaviour
                     var baseDPS = PrototypeGameManager.Instance?.armyBaseDamagePerSecond ?? 10f;
                     currentHP -= baseDPS * typeMul * randomFactor * tick;
                 }
+                // 유닛 파괴 직전 Warlog 기록
                 if (currentHP <= 0f)
                 {
-                    if (createdUI != null) Destroy(createdUI);
+                    // 팀 색상으로 유닛명 감싸기
+                    string hex = ColorUtility.ToHtmlStringRGB(TeamColor);
+                    string coloredName = $"<color=#{hex}>{title}</color>";
+                    // “Destroyed” 로그 1회 남기기
+                    WarlogManager.Instance.LogEvent(coloredName, "<b>Destroyed</b>");
+
+                    if (createdUI != null)
+                        Destroy(createdUI);
                     Destroy(gameObject);
                     yield break;
                 }
             }
+
             var wait = PrototypeGameManager.Instance?.armyCombatTickInterval ?? 0.5f;
             yield return new WaitForSeconds(wait);
         }
     }
+
 
     #region Public API
     public void AddAttacker(ArmyStatus attacker)

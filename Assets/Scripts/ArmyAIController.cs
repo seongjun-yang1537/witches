@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +44,7 @@ public class ArmyAIController : MonoBehaviour
             currentState = AIState.Healing;
         }
 
-        // ── 2) Healing 처리 ──
+        // ── 2) Healing 상태 처리 ──
         if (currentState == AIState.Healing)
         {
             HandleHealing();
@@ -51,24 +52,26 @@ public class ArmyAIController : MonoBehaviour
             return;
         }
 
-        // ── 3) HP 기준 Advance/Retreat ──
+        // ── 3) HP 기준 Advance/Retreat 결정 ──
         float hpRatio = armyStatus.currentHP / armyStatus.maxHP;
         AIState newState = (hpRatio <= retreatHPThreshold) ? AIState.Retreat : AIState.Advance;
 
-        // 상태 전환 시 한 번만 Warlog 기록
+        // 상태 전환 시 한 번만 Warlog 기록 (Retreat 진입)
         if (newState != currentState)
         {
             currentState = newState;
             if (currentState == AIState.Retreat)
             {
-                WarlogManager.Instance.LogEvent(armyStatus.title, "Start Retreat");
+                // 팀 색상으로 유닛명 감싸기
+                string hex = ColorUtility.ToHtmlStringRGB(armyStatus.TeamColor);
+                string coloredName = $"<color=#{hex}>{armyStatus.title}</color>";
+                WarlogManager.Instance.LogEvent(coloredName, "Start Retreat");
             }
         }
 
-        // 상태 변경 로깅(디버그용)
         LogStateChange();
 
-        // ── 4) 일반 상태 처리 ──
+        // ── 4) 상태별 행동 분기 ──
         switch (currentState)
         {
             case AIState.Advance:
@@ -94,7 +97,7 @@ public class ArmyAIController : MonoBehaviour
 
     void HandleAdvance()
     {
-        // … (종전 코드 유지) :contentReference[oaicite:0]{index=0}
+        // 기존 Advance 로직 유지
         var hits = Physics.OverlapSphere(transform.position, detectionRadius, armyStatus.enemyLayer);
         if (hits.Length > 0)
         {
@@ -131,7 +134,7 @@ public class ArmyAIController : MonoBehaviour
 
     void HandleRetreat()
     {
-        // 단순 이동만 수행; 로그는 Update()에서 한 번만 기록
+        // Retreat 상태에서는 이동만 수행 (로그는 Update에서 기록)
         var rp = RallyPointManager.Instance
             .GetNearestRetreatPoint(armyStatus.teamType, transform.position);
         if (rp != null)
@@ -144,7 +147,7 @@ public class ArmyAIController : MonoBehaviour
 
     void HandleHealing()
     {
-        // 전투 발생 시 중단
+        // 전투 발생 시 Healing 중단
         var hits = Physics.OverlapSphere(transform.position, detectionRadius, armyStatus.enemyLayer);
         if (hits.Length > 0)
         {
@@ -153,19 +156,23 @@ public class ArmyAIController : MonoBehaviour
             return;
         }
 
-        // 회복
+        // 지속 힐
         float before = armyStatus.currentHP;
         armyStatus.currentHP += armyStatus.healPerSecond * Time.deltaTime;
         Debug.Log($"[ArmyAI] Healing: {before:F1} → {armyStatus.currentHP:F1}");
 
-        // 완전 회복 시
+        // 완전 회복 시 Advance로 전환 및 Warlog 기록
         if (armyStatus.currentHP >= armyStatus.maxHP)
         {
             armyStatus.currentHP = armyStatus.maxHP;
             Debug.Log("[ArmyAI] Fully healed → switch to ADVANCE");
-            WarlogManager.Instance.LogEvent(armyStatus.title, "Healing Completed");
-            isInCityTrigger = false;
 
+            // 팀 색상으로 유닛명 감싸서 로그
+            string hex = ColorUtility.ToHtmlStringRGB(armyStatus.TeamColor);
+            string coloredName = $"<color=#{hex}>{armyStatus.title}</color>";
+            WarlogManager.Instance.LogEvent(coloredName, "Healing Completed");
+
+            isInCityTrigger = false;
             armyStatus.ResumeMovement();
             currentState = AIState.Advance;
             HandleAdvance();
@@ -174,7 +181,7 @@ public class ArmyAIController : MonoBehaviour
 
     void HandleRegroup()
     {
-        // TODO: 재정비 로직
+        // TODO: Regroup 로직 구현
     }
 
     void OnTriggerEnter(Collider other)
@@ -182,8 +189,13 @@ public class ArmyAIController : MonoBehaviour
         var city = other.GetComponent<CityStatus>();
         if (city != null && city.owner == armyStatus.teamType)
         {
-            Debug.Log($"[ArmyAI] Entered friendly city → start HEALING");
-            WarlogManager.Instance.LogEvent(armyStatus.title, "Start Healing");
+            Debug.Log("[ArmyAI] Entered friendly city → start HEALING");
+
+            // 팀 색상으로 유닛명 감싸서 Healing 시작 로그
+            string hex = ColorUtility.ToHtmlStringRGB(armyStatus.TeamColor);
+            string coloredName = $"<color=#{hex}>{armyStatus.title}</color>";
+            WarlogManager.Instance.LogEvent(coloredName, "Start Healing");
+
             isInCityTrigger = true;
             armyStatus.StopMovement();
             currentState = AIState.Healing;
