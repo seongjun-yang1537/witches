@@ -25,6 +25,11 @@ public class ArmyStatus : MonoBehaviour
     [Tooltip("도시에 도착했을 때 초당 회복량")]
     public float healPerSecond = 10f;
 
+    [Header("도시 점령")]
+    [Tooltip("도시 점령 시 초당 체력 감소량")]
+    public float captureSpeed = 10f;
+
+
     [Header("아군 충돌 방지")]
     public LayerMask allyLayer;
     public float allyAvoidDistance = 0.5f;

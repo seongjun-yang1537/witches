@@ -1,48 +1,45 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 
 public class CityStatus : MonoBehaviour
 {
-    [Header("µµ½Ã Á¤º¸")]
-    [Tooltip("µµ½ÃÀÇ °íÀ¯ ÀÌ¸§")]
+    [Header("ë„ì‹œ ì •ë³´")]
+    [Tooltip("ë„ì‹œì˜ ê³ ìœ  ì´ë¦„")]
     public string cityName;
 
-    [Header("Á¡·É ¼³Á¤")]
-    [Tooltip("ÃÊ±â ¼ÒÀ¯ÆÀ")]
+    [Header("ì ë ¹ ì„¤ì •")]
     public ArmyStatus.TeamType owner;
-    [Tooltip("Á¡·É ¿Ï·á±îÁö °É¸®´Â ½Ã°£ (ÃÊ)")]
-    public float captureTime = 3f;
-    [Tooltip("Á¡·É °¡´ÉÇÑ À¯´Ö ·¹ÀÌ¾î")]
+    public float maxHP = 100f;
+    public float regenPerSecond = 2f;
     public LayerMask capturerLayer;
 
-    [Header("UI ¼¼ÆÃ")]
-    [Tooltip("World¡æScreen º¯È¯¿¡ »ç¿ëÇÒ Ä«¸Ş¶ó")]
+    [Header("UI ì„¸íŒ…")]
     public Camera mainCamera;
-    [Tooltip("µµ½Ã ¶óº§ Ç¥½Ã¿ë TextMeshProUGUI")]
     public TextMeshProUGUI uiText;
-    [Tooltip("UI°¡ ¶° ÀÖÀ» ¿ùµå ¿ÀÇÁ¼Â")]
     public Vector3 uiOffset = Vector3.up;
 
-    // ³»ºÎ
-    private float captureProgress = 0f;
+    // ë‚´ë¶€ ìƒíƒœ
+    private float currentHP;
     private RectTransform uiRect;
     private Canvas uiCanvas;
+    private ArmyStatus currentCapturer = null;
+    private float lastDisplayedHP = -1f; // ğŸ”„ UI HP ì—…ë°ì´íŠ¸ ìµœì í™”ìš©
 
     void Awake()
     {
         if (mainCamera == null) mainCamera = Camera.main;
 
-        // uiText°¡ ¼ÓÇÑ RectTransform, Canvas Ã£¾ÆµÎ±â
         uiRect = uiText.GetComponent<RectTransform>();
         uiCanvas = uiText.GetComponentInParent<Canvas>();
 
-        // ÃÊ±â ¶óº§ °»½Å
-        UpdateLabel();
+        currentHP = maxHP;
+        UpdateCapturerLayer();  // ì´ˆê¸° ì†Œìœ ì ê¸°ì¤€ capturerLayer ì„¤ì •
+        UpdateLabel();          // ì´ˆê¸° UI í‘œì‹œ
     }
 
     void Update()
     {
-        // UI¸¦ ¿ùµå À§Ä¡¿¡ ¸Â°Ô ÀÌµ¿
+        // UI ìœ„ì¹˜ ê°±ì‹ 
         Vector3 worldPos = transform.position + uiOffset;
         Vector3 screenPos = mainCamera.WorldToScreenPoint(worldPos);
 
@@ -60,23 +57,54 @@ public class CityStatus : MonoBehaviour
                 out Vector2 anchoredPos);
             uiRect.anchoredPosition = anchoredPos;
         }
+
+        // ğŸ”¸ ì ë ¹ ì¤‘ì´ë©´ ì²´ë ¥ ê°ì†Œ
+        if (currentCapturer != null)
+        {
+            currentHP -= currentCapturer.captureSpeed * Time.deltaTime;
+            if (currentHP <= 0f)
+            {
+                owner = currentCapturer.teamType;
+                currentHP = maxHP * 0.3f;
+                currentCapturer = null;
+
+                UpdateCapturerLayer();
+
+                string hexColor = (owner == ArmyStatus.TeamType.Red) ? "#FF0000" : "#0000FF";
+                string coloredCity = $"<color={hexColor}>{cityName}</color>";
+                string statusText = $"<b>Captured by {owner}</b>";
+                WarlogManager.Instance?.LogEvent(coloredCity, statusText);
+
+                UpdateLabel();
+            }
+        }
+        else
+        {
+            // ğŸ”¹ ì ë ¹ ì¤‘ì´ ì•„ë‹ ë•Œ ì²´ë ¥ íšŒë³µ
+            if (currentHP < maxHP)
+            {
+                currentHP += regenPerSecond * Time.deltaTime;
+                if (currentHP > maxHP) currentHP = maxHP;
+            }
+        }
+
+        // ğŸ”„ ì²´ë ¥ì´ ë³€í–ˆì„ ê²½ìš°ì—ë§Œ UI ê°±ì‹ 
+        if (Mathf.FloorToInt(currentHP) != Mathf.FloorToInt(lastDisplayedHP))
+        {
+            lastDisplayedHP = currentHP;
+            UpdateLabel();
+        }
     }
 
     void OnTriggerStay(Collider other)
     {
-        // ÁöÁ¤µÈ ·¹ÀÌ¾î°¡ ¾Æ´Ï¸é ¸®ÅÏ
         if (((1 << other.gameObject.layer) & capturerLayer) == 0) return;
 
         var unit = other.GetComponent<ArmyStatus>();
         if (unit != null && unit.teamType != owner)
         {
-            captureProgress += Time.deltaTime;
-            if (captureProgress >= captureTime)
-            {
-                owner = unit.teamType;
-                captureProgress = 0f;
-                UpdateLabel();
-            }
+            if (currentCapturer == null || currentCapturer == unit)
+                currentCapturer = unit;
         }
     }
 
@@ -85,16 +113,24 @@ public class CityStatus : MonoBehaviour
         if (((1 << other.gameObject.layer) & capturerLayer) == 0) return;
 
         var unit = other.GetComponent<ArmyStatus>();
-        if (unit != null && unit.teamType != owner)
+        if (unit != null && unit == currentCapturer)
         {
-            captureProgress = 0f;
+            currentCapturer = null;
         }
     }
 
     private void UpdateLabel()
     {
-        // ÅØ½ºÆ®¿Í »ö»ó µ¿½Ã ¼³Á¤
-        uiText.text = $"{cityName}\n{owner}";
+        uiText.text = $"{cityName}\n{owner}\nHP: {Mathf.FloorToInt(currentHP)}";
         uiText.color = (owner == ArmyStatus.TeamType.Blue) ? Color.blue : Color.red;
+    }
+
+    /// <summary>
+    /// í˜„ì¬ ownerì— ë”°ë¼ capturerLayerë¥¼ ìë™ ì„¤ì •
+    /// </summary>
+    private void UpdateCapturerLayer()
+    {
+        string enemyLayerName = (owner == ArmyStatus.TeamType.Blue) ? "Red" : "Blue";
+        capturerLayer = LayerMask.GetMask(enemyLayerName);
     }
 }
